@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="bigint_generator" author="ngrzhibovskiy">
+        <sqlFile path="sql/bigint_generator.sql" splitStatements="false" dbms="postgresql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="main-schema-init-ddl" author="ngrzhibovskiy">
+        <sqlFile path="sql/main-schema-init-ddl.sql" dbms="postgresql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog>

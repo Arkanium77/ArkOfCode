@@ -1,0 +1,41 @@
+server:
+  port: 30302
+spring:
+  application:
+    name: ark-user
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:user_service}
+    username: ${DB_USERNAME:noah}
+    password: ${DB_PASSWORD:righteous}
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/Changelog.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: main
+logging:
+  level:
+    root: WARN
+    ru.atc.esfl: DEBUG
+management:
+  info:
+    git:
+      mode: full
+  endpoint:
+    refresh:
+      enabled: true
+    info:
+      enabled: true
+    logfile:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "*"
+        allowed-methods: GET

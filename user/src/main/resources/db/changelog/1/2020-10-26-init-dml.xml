@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                           http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="main-schema-init-ddl" author="ngrzhibovskiy">
-        <sqlFile path="sql/main-schema-init-ddl.sql" dbms="postgresql" relativeToChangelogFile="true"/>
+    <changeSet id="roles-dml" author="ngrzhibovskiy">
+        <sqlFile path="sql/roles-dml.sql" dbms="postgresql" relativeToChangelogFile="true"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -20,7 +20,10 @@ spring:
 logging:
   level:
     root: WARN
-    ru.atc.esfl: DEBUG
+    team.isaz.ark: DEBUG
+
+jwt.secret: jwtsecretword
+
 management:
   info:
     git:

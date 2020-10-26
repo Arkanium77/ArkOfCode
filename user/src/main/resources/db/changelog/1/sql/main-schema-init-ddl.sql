@@ -7,19 +7,33 @@ ALTER SCHEMA main OWNER TO noah;
 ------------------------------
 --      CREATE TABLES       --
 ------------------------------
+CREATE TABLE main.role
+(
+    name        VARCHAR(100) PRIMARY KEY,
+    create_dttm TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
 
-CREATE TABLE main.users
+CREATE TABLE main.user
 (
     id          BIGINT PRIMARY KEY                DEFAULT shard.next_id(),
     create_dttm TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    modify_dttm TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     login       VARCHAR(100)             NOT NULL,
-    password    VARCHAR(250)             NOT NULL
+    password    VARCHAR(250)             NOT NULL,
+    role        VARCHAR(100)
+        CONSTRAINT user_role_constraint_fk REFERENCES main.role
 );
+
+create unique index user_table_login_uindex
+    on main.user (login);
 
 ----------------------------
 --      OWNER SETUP       --
 ----------------------------
-ALTER TABLE main.users
+ALTER TABLE main.user
+    OWNER TO noah;
+
+ALTER TABLE main.role
     OWNER TO noah;
 
 -------------------------------------------------------------
@@ -28,11 +42,32 @@ ALTER TABLE main.users
 -------------------------------------------------------------
 -------------------------------------------------------------
 
---------------------------------------
---      EXTERNAL_SYSTEM_LOGIN       --
---------------------------------------
-COMMENT ON TABLE main.users
-    IS 'Text';
+---------------------
+--      USER       --
+---------------------
+COMMENT ON TABLE main.user
+    IS 'Таблица содержащая данные пользователей';
 
-COMMENT ON COLUMN main.users.id
-    IS 'Text';
+COMMENT ON COLUMN main.user.id
+    IS 'Идентификатор пользователя';
+COMMENT ON COLUMN main.user.create_dttm
+    IS 'Время создания записи';
+COMMENT ON COLUMN main.user.modify_dttm
+    IS 'Время последнего изменения записи';
+COMMENT ON COLUMN main.user.login
+    IS 'Логин пользователя';
+COMMENT ON COLUMN main.user.password
+    IS 'Пароль (шифрованный) пользователя';
+COMMENT ON COLUMN main.user.role
+    IS 'Роль пользователя';
+
+---------------------
+--      ROLE       --
+---------------------
+COMMENT ON TABLE main.role
+    IS 'Таблица содержащая уровни доступа (роли)';
+
+COMMENT ON COLUMN main.role.name
+    IS 'Название роли (уникальное)';
+COMMENT ON COLUMN main.role.create_dttm
+    IS 'Время создания роли';

@@ -3,7 +3,7 @@ create schema shard;
 
 comment on schema shard is 'schema for unique bigint generator';
 
-alter schema shard owner to esfl;
+alter schema shard owner to noah;
 
 create sequence shard.table_id_seq;
 
@@ -11,7 +11,7 @@ create domain shard.id as bigint;
 
 comment on type shard.id is 'internal ID type';
 
-alter domain shard.id owner to esfl;
+alter domain shard.id owner to noah;
 -------------------------------------------------------------
 
 
@@ -34,7 +34,7 @@ BEGIN
 END;
 $$;
 
-alter function shard.get_id_from_ts(ts bigint) owner to esfl;
+alter function shard.get_id_from_ts(ts bigint) owner to noah;
 -------------------------------------------------------------
 
 ------------------------------------------------------------- Возвращает идентификатор по timestamp
@@ -55,7 +55,7 @@ BEGIN
 END;
 $$;
 
-alter function shard.get_id_from_ts(ts timestamptz) owner to esfl;
+alter function shard.get_id_from_ts(ts timestamptz) owner to noah;
 -------------------------------------------------------------
 
 --------------------------------------- Возвращает элемент sequence из идентификатора записи
@@ -69,7 +69,7 @@ $$;
 
 comment on function shard.get_sequence(shard.id) is '10 bits from insta5.id representing sequence';
 
-alter function shard.get_sequence(shard.id) owner to esfl;
+alter function shard.get_sequence(shard.id) owner to noah;
 ---------------------------------------
 
 --------------------------------------- Возвращает номер шарда из идентификатора записи
@@ -83,7 +83,7 @@ $$;
 
 comment on function shard.get_shard(shard.id) is '13 bits from insta5.id representing shard';
 
-alter function shard.get_shard(shard.id) owner to esfl;
+alter function shard.get_shard(shard.id) owner to noah;
 ---------------------------------------
 
 
@@ -98,7 +98,7 @@ $$;
 
 comment on function shard.get_ts(shard.id) is '41 bits from insta5.id representing timestamp';
 
-alter function shard.get_ts(shard.id) owner to esfl;
+alter function shard.get_ts(shard.id) owner to noah;
 ---------------------------------------
 
 
@@ -124,4 +124,4 @@ BEGIN
 END;
 $$;
 
-alter function shard.next_id() owner to esfl;
+alter function shard.next_id() owner to noah;

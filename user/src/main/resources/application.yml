@@ -22,7 +22,11 @@ logging:
     root: WARN
     team.isaz.ark: DEBUG
 
-jwt.secret: jwtsecretword
+jwt:
+  secret: jwtsecretword
+  token.lifetime:
+    access: 1
+    refresh: 30
 
 management:
   info:

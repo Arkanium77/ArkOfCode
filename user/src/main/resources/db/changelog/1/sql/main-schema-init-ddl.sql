@@ -15,12 +15,14 @@ CREATE TABLE main.role
 
 CREATE TABLE main.user
 (
-    id          BIGINT PRIMARY KEY                DEFAULT shard.next_id(),
-    create_dttm TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    modify_dttm TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    login       VARCHAR(100)             NOT NULL,
-    password    VARCHAR(250)             NOT NULL,
-    role        VARCHAR(100)
+    id                BIGINT PRIMARY KEY                DEFAULT shard.next_id(),
+    create_dttm       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    modify_dttm       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    login             VARCHAR(100)             NOT NULL UNIQUE,
+    password          VARCHAR(250)             NOT NULL,
+    token_verify_code UUID                     NOT NULL,
+    banned            BOOLEAN                  NOT NULL DEFAULT FALSE,
+    role              VARCHAR(100)
         CONSTRAINT user_role_constraint_fk REFERENCES main.role
 );
 

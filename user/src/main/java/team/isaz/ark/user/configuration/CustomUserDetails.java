@@ -1,5 +1,6 @@
 package team.isaz.ark.user.configuration;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,19 +8,23 @@ import team.isaz.ark.user.entity.UserEntity;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private String login;
+    private UUID tokenVerifyCode;
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
     public static CustomUserDetails fromUserEntityToCustomUserDetails(UserEntity userEntity) {
-        CustomUserDetails c = new CustomUserDetails();
-        c.login = userEntity.getLogin();
-        c.password = userEntity.getPassword();
-        c.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().getName()));
-        return c;
+        CustomUserDetails customUserDetails = new CustomUserDetails();
+        customUserDetails.login = userEntity.getLogin();
+        customUserDetails.password = userEntity.getPassword();
+        customUserDetails.tokenVerifyCode = userEntity.getTokenVerifyCode();
+        customUserDetails.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().getName()));
+        return customUserDetails;
     }
 
     @Override

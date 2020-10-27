@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,6 +42,12 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "banned")
+    private boolean isUserBanned;
+
+    @Column(name = "token_verify_code")
+    private UUID tokenVerifyCode;
+
     @ManyToOne
     @JoinColumn(name = "role")
     private RoleEntity role;
@@ -53,6 +60,10 @@ public class UserEntity {
         if (modifyDttm == null) {
             modifyDttm = OffsetDateTime.now();
         }
+        if (tokenVerifyCode == null) {
+            tokenVerifyCode = UUID.randomUUID();
+        }
+        isUserBanned = false;
     }
 
     @PreUpdate
@@ -60,5 +71,6 @@ public class UserEntity {
         if (modifyDttm == null) {
             modifyDttm = OffsetDateTime.now();
         }
+        tokenVerifyCode = UUID.randomUUID();
     }
 }

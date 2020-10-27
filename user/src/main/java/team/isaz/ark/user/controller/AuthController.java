@@ -2,10 +2,13 @@ package team.isaz.ark.user.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import team.isaz.ark.user.configuration.jwt.JwtProvider;
+import team.isaz.ark.user.dto.Tokens;
 import team.isaz.ark.user.dto.UserInfo;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.service.UserService;
@@ -13,28 +16,31 @@ import team.isaz.ark.user.service.UserService;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/public")
 public class AuthController {
     private final UserService userService;
-    private final JwtProvider jwtProvider;
 
-    public AuthController(UserService userService, JwtProvider jwtProvider) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.jwtProvider = jwtProvider;
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody @Valid UserInfo userInfo) {
-        UserEntity u = new UserEntity();
-        u.setPassword(userInfo.getPassword());
-        u.setLogin(userInfo.getLogin());
-        userService.saveUser(u);
-        return "OK";
+    public ResponseEntity<String> registerUser(@RequestBody @Valid UserInfo userInfo) {
+        UserEntity userEntity = userService.registerUser(userInfo);
+        return new ResponseEntity<>(userEntity.getLogin() + ", registration success! Now auth with your password.", HttpStatus.OK);
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<String> auth(@RequestBody UserInfo request) {
-        UserEntity userEntity = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
-        String token = jwtProvider.generateToken(userEntity.getLogin());
-        return new ResponseEntity<>(token, HttpStatus.OK);
+    public ResponseEntity<?> auth(@RequestBody UserInfo request) {
+        Tokens tokens = userService.login(request);
+        return tokens == null ?
+                new ResponseEntity<>("Login failed! Try again!", HttpStatus.UNAUTHORIZED) :
+                new ResponseEntity<>(tokens, HttpStatus.OK);
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<Tokens> registerUser(@RequestParam String refreshToken) {
+        Tokens tokens = userService.refreshToken(refreshToken);
+        return new ResponseEntity<>(tokens, HttpStatus.OK);
     }
 }

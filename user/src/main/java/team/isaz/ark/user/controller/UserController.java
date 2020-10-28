@@ -1,6 +1,8 @@
 package team.isaz.ark.user.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,10 +28,17 @@ public class UserController {
 
     @PutMapping("/change_login")
     @Operation(
+            summary = "Метод смены логина",
+            description = "Метод, используемый для смены логина владельца токена аутентификации",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    public ResponseEntity<String> changeLogin(@RequestParam String newLogin,
-                                              @RequestHeader HttpHeaders headers) {
+    @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
+    @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
+    public ResponseEntity<String> changeLogin(
+            @Schema(required = true,
+                    description = "Строка, содержащая новый логин")
+            @RequestParam String newLogin,
+            @RequestHeader HttpHeaders headers) {
         String token = Objects.requireNonNull(headers.get("Authorization")).get(0);
         userService.changeLogin(token, newLogin);
         return new ResponseEntity<>("Login has been successfully changed. All old tokens have been recalled. Re-authorize.", HttpStatus.OK);
@@ -37,10 +46,18 @@ public class UserController {
 
     @PutMapping("/change_password")
     @Operation(
+            summary = "Метод смены пароля",
+            description = "Метод, используемый для смены пароля владельца токена аутентификации",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    public ResponseEntity<String> changePassword(@RequestParam String newPassword,
-                                                 @RequestHeader HttpHeaders headers) {
+    @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
+    @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
+
+    public ResponseEntity<String> changePassword(
+            @Schema(required = true,
+                    description = "Строка, содержащая новый пароль")
+            @RequestParam String newPassword,
+            @RequestHeader HttpHeaders headers) {
         String token = Objects.requireNonNull(headers.get("Authorization")).get(0);
         userService.changePassword(token, newPassword);
         return new ResponseEntity<>("Password has been successfully changed. All old tokens have been recalled. Re-authorize.", HttpStatus.OK);
@@ -48,8 +65,12 @@ public class UserController {
 
     @DeleteMapping("/delete_account")
     @Operation(
+            summary = "Метод удаления аккаунта",
+            description = "Метод, используемый для удаления аккаунта владельца токена аутентификации",
             security = @SecurityRequirement(name = "bearerAuth")
     )
+    @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
+    @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
     public ResponseEntity<String> deleteAccount(@RequestHeader HttpHeaders headers) {
         String token = Objects.requireNonNull(headers.get("Authorization")).get(0);
         userService.deleteAccount(token);

@@ -9,7 +9,7 @@ ALTER SCHEMA main OWNER TO noah;
 ------------------------------
 CREATE TABLE main.role
 (
-    name        VARCHAR(100) PRIMARY KEY,
+    name        VARCHAR(20) PRIMARY KEY,
     create_dttm TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
@@ -18,11 +18,11 @@ CREATE TABLE main.user
     id                BIGINT PRIMARY KEY                DEFAULT shard.next_id(),
     create_dttm       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     modify_dttm       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    login             VARCHAR(100)             NOT NULL UNIQUE,
-    password          VARCHAR(250)             NOT NULL,
+    login             VARCHAR(25)              NOT NULL UNIQUE,
+    password          VARCHAR(50)              NOT NULL,
     token_verify_code UUID                     NOT NULL,
     banned            BOOLEAN                  NOT NULL DEFAULT FALSE,
-    role              VARCHAR(100)
+    role              VARCHAR(20)
         CONSTRAINT user_role_constraint_fk REFERENCES main.role
 );
 

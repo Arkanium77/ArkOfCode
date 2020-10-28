@@ -75,16 +75,6 @@ public class UserService {
                 .orElse(null);
     }
 
-    public boolean changeLogin(String token, String newLogin) {
-        String login = jwtProvider.getLoginFromToken(token);
-        if (userEntityRepository.findByLogin(newLogin).isPresent()) return false;
-        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Unexpected error: token valid, but user not found!"));
-        userEntity.setLogin(newLogin);
-        userEntityRepository.save(userEntity);
-        log.info("Login for id={} changed from {} to {}", userEntity.getId(), login, userEntity.getLogin());
-        return true;
-    }
-
     public Optional<UserEntity> findByLogin(String username) {
         log.debug("Searching user \"{}\"", username);
         return userEntityRepository.findByLogin(username);
@@ -100,5 +90,30 @@ public class UserService {
         log.info("Token successful refreshed");
         return tokens;
 
+    }
+
+    public void changeLogin(String token, String newLogin) {
+        String login = jwtProvider.getLoginFromToken(token);
+        if (userEntityRepository.existsByLogin(newLogin))
+            throw new RuntimeException("User with your new login (" + newLogin + ") already exists!");
+        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
+        userEntity.setLogin(newLogin);
+        userEntityRepository.save(userEntity);
+        log.info("Login for id={} changed from {} to {}", userEntity.getId(), login, userEntity.getLogin());
+    }
+
+    public void changePassword(String token, String newPassword) {
+        String login = jwtProvider.getLoginFromToken(token);
+        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
+        userEntity.setPassword(passwordEncoder.encode(newPassword));
+        userEntityRepository.save(userEntity);
+        log.info("Password for {} (id = {}) successful changed", login, userEntity.getId());
+    }
+
+    public void deleteAccount(String token) {
+        String login = jwtProvider.getLoginFromToken(token);
+        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
+        userEntityRepository.delete(userEntity);
+        log.info("Account of {} successful deleted", login);
     }
 }

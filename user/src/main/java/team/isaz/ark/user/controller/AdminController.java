@@ -34,6 +34,23 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+    @GetMapping("/id/{login}")
+    @Operation(
+            summary = "Получение идентификатора пользователя",
+            description = "Метод, используемый для получения идентификатора пользователя по логину.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
+    @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
+    public ResponseEntity<String> delete(
+            @Schema(required = true,
+                    description = "Идентификатор пользователя")
+            @Valid @PathVariable @Pattern(regexp = RegexPatterns.LOGIN,
+                    message = "Login must contain from 6 to 25 characters. Allowed to use only Latin letters (in any case) and the underscore character")
+                    String login) {
+        return new ResponseEntity<>(adminService.getId(login).toString(), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}/ban")
     @Operation(
             summary = "Забанить пользователя",
@@ -82,20 +99,38 @@ public class AdminController {
         return new ResponseEntity<>("User successful deleted!", HttpStatus.OK);
     }
 
-    @GetMapping("/id/{login}")
+    ;
+
+    @PutMapping("/{id}/promote")
     @Operation(
-            summary = "Удалить пользователя",
-            description = "Метод, используемый для удаления пользователя по id",
+            summary = "Дать полномочия администратора",
+            description = "Метод, используемый для продвижения пользователя до роли администратора по id",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
     @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
-    public ResponseEntity<String> delete(
+    public ResponseEntity<String> promote(
             @Schema(required = true,
                     description = "Идентификатор пользователя")
-            @Valid @PathVariable @Pattern(regexp = RegexPatterns.LOGIN,
-                    message = "Login must contain from 6 to 25 characters. Allowed to use only Latin letters (in any case) and the underscore character")
-                    String login) {
-        return new ResponseEntity<>(adminService.getId(login).toString(), HttpStatus.OK);
+            @Valid @PathVariable @NotNull @Positive Long id) {
+        adminService.promoteAccount(id);
+        return new ResponseEntity<>("User successful promoted!", HttpStatus.OK);
     }
+
+    @PutMapping("/{id}/demote")
+    @Operation(
+            summary = "Отнять полномочия администратора",
+            description = "Метод, используемый для понижения пользователя до роли стандартных полномочий по id",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
+    @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
+    public ResponseEntity<String> demote(
+            @Schema(required = true,
+                    description = "Идентификатор пользователя")
+            @Valid @PathVariable @NotNull @Positive Long id) {
+        adminService.demoteAccount(id);
+        return new ResponseEntity<>("User successful demoted!", HttpStatus.OK);
+    }
+
 }

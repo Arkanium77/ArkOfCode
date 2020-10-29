@@ -39,6 +39,7 @@ public class UserService {
 
     private UserEntity register(String login, String password, RoleEntity role) {
         log.info("Trying register \"{}\" with role {}", login, role.getName());
+        log.info("Password {} => {}", password, passwordEncoder.encode(password));
         UserEntity userEntity = userEntityRepository.save(UserEntity.builder()
                 .login(login)
                 .password(passwordEncoder.encode(password))

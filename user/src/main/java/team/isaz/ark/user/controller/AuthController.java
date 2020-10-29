@@ -3,8 +3,10 @@ package team.isaz.ark.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,11 @@ import team.isaz.ark.user.service.UserService;
 
 import javax.validation.Valid;
 
+@Validated
 @RestController
 @RequestMapping("/public")
+@Tag(name = "Контроллер доступа",
+        description = "Используется для регистрации, авторизации, продления токенов")
 public class AuthController {
     private final UserService userService;
 
@@ -34,10 +39,10 @@ public class AuthController {
     )
     @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
     @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
-    public ResponseEntity<String> registerUser(@RequestBody
+    public ResponseEntity<String> registerUser(@Valid
+                                               @RequestBody
                                                @Schema(required = true,
-                                                       description = "Информация о пользователе (логин, пароль)")
-                                               @Valid UserInfo userInfo) {
+                                                       description = "Информация о пользователе (логин, пароль)") UserInfo userInfo) {
         UserEntity userEntity = userService.registerUser(userInfo);
         return new ResponseEntity<>(userEntity.getLogin() + ", registration success! Now auth with your password.", HttpStatus.OK);
     }
@@ -49,10 +54,11 @@ public class AuthController {
     )
     @ApiResponse(responseCode = "200", description = "Json с парой токенов (access и refresh)")
     @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
-    public ResponseEntity<?> auth(@RequestBody
+    public ResponseEntity<?> auth(@Valid
+                                  @RequestBody
                                   @Schema(required = true,
                                           description = "Информация о пользователе (логин, пароль)")
-                                  @Valid UserInfo request) {
+                                          UserInfo request) {
         Tokens tokens = userService.login(request);
         return tokens == null ?
                 new ResponseEntity<>("Login failed! Try again!", HttpStatus.UNAUTHORIZED) :

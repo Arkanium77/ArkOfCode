@@ -18,8 +18,8 @@ CREATE TABLE main.user
     id                BIGINT PRIMARY KEY                DEFAULT shard.next_id(),
     create_dttm       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     modify_dttm       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    login             VARCHAR(25)              NOT NULL UNIQUE,
-    password          VARCHAR(50)              NOT NULL,
+    login             VARCHAR(30)              NOT NULL UNIQUE,
+    password          VARCHAR(100)             NOT NULL,
     token_verify_code UUID                     NOT NULL,
     banned            BOOLEAN                  NOT NULL DEFAULT FALSE,
     role              VARCHAR(20)

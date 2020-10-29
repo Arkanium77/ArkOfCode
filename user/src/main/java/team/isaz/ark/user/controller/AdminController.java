@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.user.constants.RegexPatterns;
+import team.isaz.ark.user.dto.UserInfo;
 import team.isaz.ark.user.service.main.AdminService;
 
 import javax.validation.Valid;
@@ -99,8 +101,6 @@ public class AdminController {
         return new ResponseEntity<>("User successful deleted!", HttpStatus.OK);
     }
 
-    ;
-
     @PutMapping("/{id}/promote")
     @Operation(
             summary = "Дать полномочия администратора",
@@ -131,6 +131,26 @@ public class AdminController {
             @Valid @PathVariable @NotNull @Positive Long id) {
         adminService.demoteAccount(id);
         return new ResponseEntity<>("User successful demoted!", HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(
+            summary = "Обновить данные пользователя",
+            description = "Метод, используемый для принудительной смены логина/пароля пользователя",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponse(responseCode = "200", description = "Сообщение об успешном завершении операции")
+    @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
+    public ResponseEntity<String> update(
+            @Schema(required = true,
+                    description = "Идентификатор пользователя")
+            @Valid @PathVariable @NotNull @Positive Long id,
+            @Valid
+            @RequestBody
+            @Schema(required = true,
+                    description = "Информация о пользователе (логин, пароль)") UserInfo userInfo) {
+        adminService.changeUserData(id, userInfo);
+        return new ResponseEntity<>("User data successful updated!", HttpStatus.OK);
     }
 
 }

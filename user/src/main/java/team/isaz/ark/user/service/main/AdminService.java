@@ -5,10 +5,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.isaz.ark.user.configuration.jwt.JwtProvider;
 import team.isaz.ark.user.constants.Roles;
+import team.isaz.ark.user.dto.UserInfo;
 import team.isaz.ark.user.entity.RoleEntity;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.repository.RoleEntityRepository;
 import team.isaz.ark.user.repository.UserEntityRepository;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -29,17 +32,24 @@ public class AdminService {
         this.roleEntityRepository = roleEntityRepository;
     }
 
-    /*
+
     public void changeUserData(Long id, UserInfo userInfo) {
-        String login = jwtProvider.getLoginFromToken(token);
-        if (userEntityRepository.existsByLogin(newLogin))
-            throw new RuntimeException("User with your new login (" + newLogin + ") already exists!");
-        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
-        userEntity.setLogin(newLogin);
+        if (Objects.isNull(userInfo) || Objects.isNull(userInfo.getLogin()) && Objects.isNull(userInfo.getPassword()))
+            throw new RuntimeException("No data to change!");
+        UserEntity userEntity = userEntityRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found!"));
+        if ((userInfo.getLogin() == null || userEntity.getLogin().equals(userInfo.getLogin())) && (passwordEncoder.matches(userInfo.getPassword(), userEntity.getPassword()))) {
+            throw new RuntimeException("That user already updated!");
+        }
+        if (userInfo.getLogin() != null) {
+            if (userEntityRepository.existsByLogin(userInfo.getLogin()))
+                throw new RuntimeException("User with new login (" + userInfo.getLogin() + ") already exists!");
+            userEntity.setLogin(userInfo.getLogin());
+        }
+        if (userInfo.getPassword() != null) userEntity.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         userEntityRepository.save(userEntity);
-        log.info("Login for id={} changed from {} to {}", userEntity.getId(), login, userEntity.getLogin());
+        log.info("Data of user with id={} updated", userEntity.getId());
     }
-*/
+
     public Long getId(String login) {
         UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("User not found!"));
         log.info("Account {} have id = {}", userEntity.getLogin(), userEntity.getId());

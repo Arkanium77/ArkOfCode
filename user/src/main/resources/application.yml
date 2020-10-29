@@ -17,10 +17,6 @@ spring:
     properties:
       hibernate:
         default_schema: main
-logging:
-  level:
-    root: WARN
-    team.isaz.ark: DEBUG
 
 jwt:
   secret: jwtsecretword

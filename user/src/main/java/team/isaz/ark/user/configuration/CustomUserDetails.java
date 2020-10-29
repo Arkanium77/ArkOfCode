@@ -16,6 +16,7 @@ public class CustomUserDetails implements UserDetails {
     private String login;
     private UUID tokenVerifyCode;
     private String password;
+    private boolean userBanned;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
     public static CustomUserDetails fromUserEntityToCustomUserDetails(UserEntity userEntity) {
@@ -24,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
         customUserDetails.password = userEntity.getPassword();
         customUserDetails.tokenVerifyCode = userEntity.getTokenVerifyCode();
         customUserDetails.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().getName()));
+        customUserDetails.userBanned = userEntity.isUserBanned();
         return customUserDetails;
     }
 

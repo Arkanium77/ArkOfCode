@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import team.isaz.ark.user.configuration.CustomUserDetails;
-import team.isaz.ark.user.service.CustomUserDetailsService;
+import team.isaz.ark.user.service.auxiliary.CustomUserDetailsService;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -41,6 +41,12 @@ public class JwtFilter extends GenericFilterBean {
             if (!verifyCode.equals(customUserDetails.getTokenVerifyCode())) {
                 log.info("Token verify code from token don't equals code received from service");
                 log.debug("login: {}, corrupted verifyCode  {}", userLogin, verifyCode);
+                filterChain.doFilter(servletRequest, servletResponse);
+                return;
+            }
+            if (customUserDetails.isUserBanned()) {
+                log.info("User banned!");
+                log.debug("login: {}, isUserBanned =  {}", userLogin, customUserDetails.isUserBanned());
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
             }

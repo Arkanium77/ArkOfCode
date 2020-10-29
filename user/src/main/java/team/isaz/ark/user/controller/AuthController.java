@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.user.dto.Tokens;
 import team.isaz.ark.user.dto.UserInfo;
 import team.isaz.ark.user.entity.UserEntity;
-import team.isaz.ark.user.service.UserService;
+import team.isaz.ark.user.service.main.AccountService;
 
 import javax.validation.Valid;
 
@@ -26,10 +26,10 @@ import javax.validation.Valid;
 @Tag(name = "Контроллер доступа",
         description = "Используется для регистрации, авторизации, продления токенов")
 public class AuthController {
-    private final UserService userService;
+    private final AccountService accountService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @PostMapping("/register")
@@ -43,7 +43,7 @@ public class AuthController {
                                                @RequestBody
                                                @Schema(required = true,
                                                        description = "Информация о пользователе (логин, пароль)") UserInfo userInfo) {
-        UserEntity userEntity = userService.registerUser(userInfo);
+        UserEntity userEntity = accountService.registerUser(userInfo);
         return new ResponseEntity<>(userEntity.getLogin() + ", registration success! Now auth with your password.", HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class AuthController {
                                   @Schema(required = true,
                                           description = "Информация о пользователе (логин, пароль)")
                                           UserInfo request) {
-        Tokens tokens = userService.login(request);
+        Tokens tokens = accountService.login(request);
         return tokens == null ?
                 new ResponseEntity<>("Login failed! Try again!", HttpStatus.UNAUTHORIZED) :
                 new ResponseEntity<>(tokens, HttpStatus.OK);
@@ -76,7 +76,7 @@ public class AuthController {
                                                @Schema(required = true,
                                                        description = "Актуальный refresh-токен")
                                                        String refreshToken) {
-        Tokens tokens = userService.refreshToken(refreshToken);
+        Tokens tokens = accountService.refreshToken(refreshToken);
         return new ResponseEntity<>(tokens, HttpStatus.OK);
     }
 }

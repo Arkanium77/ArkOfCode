@@ -1,4 +1,4 @@
-package team.isaz.ark.user.service;
+package team.isaz.ark.user.service.main;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,14 +16,13 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class UserService {
-
+public class AccountService {
     private final UserEntityRepository userEntityRepository;
     private final RoleEntityRepository roleEntityRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public UserService(final UserEntityRepository userEntityRepository,
+    public AccountService(final UserEntityRepository userEntityRepository,
                        final RoleEntityRepository roleEntityRepository,
                        final PasswordEncoder passwordEncoder,
                        final JwtProvider jwtProvider) {
@@ -91,30 +90,5 @@ public class UserService {
         log.info("Token successful refreshed");
         return tokens;
 
-    }
-
-    public void changeLogin(String token, String newLogin) {
-        String login = jwtProvider.getLoginFromToken(token);
-        if (userEntityRepository.existsByLogin(newLogin))
-            throw new RuntimeException("User with your new login (" + newLogin + ") already exists!");
-        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
-        userEntity.setLogin(newLogin);
-        userEntityRepository.save(userEntity);
-        log.info("Login for id={} changed from {} to {}", userEntity.getId(), login, userEntity.getLogin());
-    }
-
-    public void changePassword(String token, String newPassword) {
-        String login = jwtProvider.getLoginFromToken(token);
-        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
-        userEntity.setPassword(passwordEncoder.encode(newPassword));
-        userEntityRepository.save(userEntity);
-        log.info("Password for {} (id = {}) successful changed", login, userEntity.getId());
-    }
-
-    public void deleteAccount(String token) {
-        String login = jwtProvider.getLoginFromToken(token);
-        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Token valid, but user not found!"));
-        userEntityRepository.delete(userEntity);
-        log.info("Account of {} successful deleted", login);
     }
 }

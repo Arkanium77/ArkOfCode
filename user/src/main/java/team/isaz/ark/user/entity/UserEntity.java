@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.With;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Data
+@With
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

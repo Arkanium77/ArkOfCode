@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.user.constants.RegexPatterns;
-import team.isaz.ark.user.service.UserService;
+import team.isaz.ark.user.service.main.UserService;
 
 import java.util.Objects;
 import javax.validation.Valid;

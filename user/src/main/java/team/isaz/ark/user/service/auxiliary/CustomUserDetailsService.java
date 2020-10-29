@@ -1,4 +1,4 @@
-package team.isaz.ark.user.service;
+package team.isaz.ark.user.service.auxiliary;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -6,20 +6,19 @@ import org.springframework.stereotype.Service;
 import team.isaz.ark.user.configuration.CustomUserDetails;
 import team.isaz.ark.user.entity.RoleEntity;
 import team.isaz.ark.user.entity.UserEntity;
-
-import java.util.UUID;
+import team.isaz.ark.user.service.main.AccountService;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserService userService;
+    private final AccountService accountService;
 
-    public CustomUserDetailsService(UserService userService) {
-        this.userService = userService;
+    public CustomUserDetailsService(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userService.findByLogin(username).orElse(getEmpty());
+        UserEntity userEntity = accountService.findByLogin(username).orElse(getEmpty());
         return CustomUserDetails.fromUserEntityToCustomUserDetails(userEntity);
     }
 

@@ -5,13 +5,13 @@
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(%-10.30logger{10}){cyan} %clr(:){faint} %m%n%wex
+            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(%logger{10}){cyan}%clr(:\n){faint} %m%n%wex
             </pattern>
             <charset>utf8</charset>
         </encoder>
     </appender>
 
-    <logger name="team.isaz" level="INFO" additivity="false">
+    <logger name="team.isaz" level="DEBUG" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
 

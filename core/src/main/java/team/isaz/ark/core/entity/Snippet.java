@@ -28,7 +28,7 @@ public class Snippet {
     @Field(type = FieldType.Date_Nanos, format = DateFormat.date_time)
     private OffsetDateTime modifyDttm;
     private boolean hidden = false;
-    private Long author;
+    private String author;
     private String title;
     private String text;
     private Set<String> tags;

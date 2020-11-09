@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import team.isaz.ark.core.service.PublisherService;
 import team.isaz.ark.core.service.SearchService;
 
 import java.util.List;
+import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/main")
@@ -29,6 +31,11 @@ public class MainController {
     @GetMapping("/get")
     public ResponseEntity<List<Snippet>> getAll() {
         return new ResponseEntity<>(searchService.all(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get/{author}")
+    public ResponseEntity<List<Snippet>> getAllAvailable(@PathVariable @NotBlank String author) {
+        return new ResponseEntity<>(searchService.allAvailable(author), HttpStatus.OK);
     }
 
     @PostMapping("/add")

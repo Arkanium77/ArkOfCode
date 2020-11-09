@@ -18,4 +18,8 @@ public class SearchService {
     public List<Snippet> all() {
         return Lists.newArrayList(snippetRepository.findAll());
     }
+
+    public List<Snippet> allAvailable(String author) {
+        return snippetRepository.findAllByAuthorOrHiddenFalse(author);
+    }
 }

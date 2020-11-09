@@ -6,4 +6,5 @@ import team.isaz.ark.core.entity.Snippet;
 import java.util.List;
 
 public interface SnippetRepository extends ElasticsearchRepository<Snippet, String> {
+    List<Snippet> findAllByAuthorOrHiddenFalse(String author);
 }

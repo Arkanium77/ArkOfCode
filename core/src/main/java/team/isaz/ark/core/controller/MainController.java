@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import team.isaz.ark.core.dto.FindBy;
 import team.isaz.ark.core.entity.Snippet;
 import team.isaz.ark.core.service.PublisherService;
 import team.isaz.ark.core.service.SearchService;
@@ -36,6 +37,11 @@ public class MainController {
     @GetMapping("/get/{author}")
     public ResponseEntity<List<Snippet>> getAllAvailable(@PathVariable @NotBlank String author) {
         return new ResponseEntity<>(searchService.allAvailable(author), HttpStatus.OK);
+    }
+
+    @PostMapping("/find/{author}")
+    public ResponseEntity<List<Snippet>> find(@PathVariable @NotBlank String author, @RequestBody FindBy query) {
+        return new ResponseEntity<>(searchService.find(author, query), HttpStatus.OK);
     }
 
     @PostMapping("/add")

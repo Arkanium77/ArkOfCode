@@ -15,7 +15,8 @@ import java.time.OffsetDateTime;
 @Component
 public class SnippetPreprocessingAspect {
 
-    @Pointcut("within(team.isaz.ark.core.service.PublisherService) && execution(* *..publish(team.isaz.ark.core.entity.Snippet))")
+    @Pointcut("within(team.isaz.ark.core.service.PublisherService) " +
+            "&& execution(* *..publish(team.isaz.ark.core.entity.Snippet))")
     public void prepareSnippet() {
     }
 
@@ -27,7 +28,8 @@ public class SnippetPreprocessingAspect {
         try {
             return jp.proceed(args);
         } catch (Throwable throwable) {
-            log.error("Unexpected {} : {}", throwable.getClass().getSimpleName(), throwable.getMessage());
+            log.error("Unexpected {} : {}", throwable.getClass()
+                    .getSimpleName(), throwable.getMessage());
             throw new RuntimeException(throwable);
         }
     }

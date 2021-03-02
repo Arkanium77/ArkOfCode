@@ -1,4 +1,4 @@
-package team.isaz.ark.sinsystem.model;
+package team.isaz.ark.libs.sinsystem.model;
 
 
 import lombok.AllArgsConstructor;

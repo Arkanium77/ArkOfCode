@@ -3,10 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <artifactId>ark</artifactId>
+        <groupId>team.isaz</groupId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>team.isaz.ark</groupId>
     <artifactId>user</artifactId>
@@ -140,7 +139,7 @@
         </dependency>
 
         <dependency>
-            <groupId>team.isaz.ark</groupId>
+            <groupId>team.isaz.ark.libs</groupId>
             <artifactId>sinsystem</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

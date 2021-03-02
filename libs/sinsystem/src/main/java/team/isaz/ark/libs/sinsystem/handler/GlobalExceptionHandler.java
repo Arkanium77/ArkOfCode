@@ -1,4 +1,4 @@
-package team.isaz.ark.sinsystem.handler;
+package team.isaz.ark.libs.sinsystem.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,10 +7,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import team.isaz.ark.sinsystem.model.SinDescription;
-import team.isaz.ark.sinsystem.model.sin.InternalSin;
-import team.isaz.ark.sinsystem.model.sin.Sin;
-import team.isaz.ark.sinsystem.model.sin.ValidationSin;
+import team.isaz.ark.libs.sinsystem.model.SinDescription;
+import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
+import team.isaz.ark.libs.sinsystem.model.sin.Sin;
+import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
 @Slf4j
 @RestControllerAdvice

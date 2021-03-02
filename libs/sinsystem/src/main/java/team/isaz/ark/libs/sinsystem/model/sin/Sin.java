@@ -1,4 +1,4 @@
-package team.isaz.ark.sinsystem.model.sin;
+package team.isaz.ark.libs.sinsystem.model.sin;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

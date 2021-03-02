@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team.isaz.ark.sinsystem.model.ArkOfSinCodes;
-import team.isaz.ark.sinsystem.model.sin.AuthenticationSin;
-import team.isaz.ark.sinsystem.model.sin.InternalSin;
-import team.isaz.ark.sinsystem.model.sin.ValidationSin;
+import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
+import team.isaz.ark.libs.sinsystem.model.sin.AuthenticationSin;
+import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
+import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
 import java.util.Random;
 import javax.management.ReflectionException;

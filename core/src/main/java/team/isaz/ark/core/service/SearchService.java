@@ -3,7 +3,9 @@ package team.isaz.ark.core.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -18,6 +20,7 @@ import team.isaz.ark.core.entity.Snippet;
 import team.isaz.ark.core.repository.SnippetRepository;
 import team.isaz.ark.core.service.helper.ComplexRequestHelper;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,18 +30,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class SearchService {
     private final SnippetRepository snippetRepository;
-    private final RestHighLevelClient client;
+    private final @Qualifier("elasticHighLevelClient")
+    RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final ComplexRequestHelper requestHelper;
-
-    public SearchService(SnippetRepository snippetRepository, @Qualifier("elasticHighLevelClient") RestHighLevelClient client, ObjectMapper mapper, ComplexRequestHelper requestHelper) {
-        this.snippetRepository = snippetRepository;
-        this.client = client;
-        this.mapper = mapper;
-        this.requestHelper = requestHelper;
-    }
 
     public List<Snippet> all() {
         return Lists.newArrayList(snippetRepository.findAll());
@@ -62,9 +60,18 @@ public class SearchService {
                     .source(new SearchSourceBuilder()
                             .query(query)
                     ).scroll(TimeValue.timeValueMinutes(1L)), RequestOptions.DEFAULT);
+
+            ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+            clearScrollRequest.addScrollId(r.getScrollId());
+            try {
+                client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+            } catch (IOException e) {
+                log.error("Can't clear scroll context with id=<{}>", r.getScrollId());
+            }
             return Arrays.asList(r.getHits().getHits());
         } catch (Exception e) {
-            log.error("Caught {} when trying search by query {}.\n Message: {}", e.getClass().getSimpleName(), query.toString(), e.getMessage());
+            log.error("Caught {} when trying search by query {}.\n Message: {}", e.getClass().getSimpleName(), query.toString(), e
+                    .getMessage());
             return Collections.emptyList();
         }
     }

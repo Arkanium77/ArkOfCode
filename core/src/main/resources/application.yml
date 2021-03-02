@@ -9,6 +9,17 @@ elastic-search:
   ports: 9200
   initial-import:
     enabled: false
+
+feign:
+  client.config.default:
+    readTimeout: 5000
+    connectTimeout: 5000
+    hystrix:
+      enabled: false
+  user:
+    name: user
+    url: http://localhost:30302/
+
 management:
   info:
     git:

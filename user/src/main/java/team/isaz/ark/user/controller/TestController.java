@@ -8,7 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team.isaz.ark.sinsystem.sin.InternalSin;
+import team.isaz.ark.sinsystem.model.ArkOfSinCodes;
+import team.isaz.ark.sinsystem.model.sin.AuthenticationSin;
+import team.isaz.ark.sinsystem.model.sin.InternalSin;
+import team.isaz.ark.sinsystem.model.sin.ValidationSin;
 
 import java.util.Random;
 import javax.management.ReflectionException;
@@ -29,7 +32,7 @@ public class TestController {
     @ApiResponse(responseCode = "500", description = "Сообщение о типе и описании произошедшей ошибки")
     public ResponseEntity<String> throwIt() {
         Random r = new Random();
-        int a = r.nextInt(5);
+        int a = r.nextInt(7);
         switch (a) {
             case 0:
                 throw new ArithmeticException("Арифметик ексепшон");
@@ -41,6 +44,10 @@ public class TestController {
                 throw new NullPointerException("вот  что я люблю");
             case 4:
                 throw new RuntimeException("Хз чего");
+            case 5:
+                throw new AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode.ERR_CODE_11000, "Хз чего");
+            case 6:
+                throw new ValidationSin(ArkOfSinCodes.ValidationErrorCode.ERR_CODE_12000);
         }
         return ResponseEntity.ok("Ok");
     }

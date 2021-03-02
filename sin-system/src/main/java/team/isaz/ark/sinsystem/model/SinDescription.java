@@ -1,10 +1,11 @@
-package team.isaz.ark.sinsystem.sin;
+package team.isaz.ark.sinsystem.model;
 
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import team.isaz.ark.sinsystem.model.sin.Sin;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

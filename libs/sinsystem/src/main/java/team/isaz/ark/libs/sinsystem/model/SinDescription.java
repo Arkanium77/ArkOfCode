@@ -7,9 +7,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import team.isaz.ark.libs.sinsystem.model.sin.Sin;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Getter
@@ -26,7 +26,7 @@ public class SinDescription {
     public SinDescription(Sin ex, String serviceCode, WebRequest request) {
         this.serviceCode = serviceCode;
         this.arkErrorCode = ex.getArkErrorCode();
-        this.httpErrorCode = ex.getStatus().value() + "";
+        this.httpErrorCode = String.valueOf(ex.getStatus().value());
         this.localizedMessage = ex.getLocalizedMessage();
         this.message = ex.getMessage();
         this.timestamp = ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);

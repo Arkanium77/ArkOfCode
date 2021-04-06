@@ -15,8 +15,7 @@ import java.time.OffsetDateTime;
 @Component
 public class SnippetPreprocessingAspect {
 
-    @Pointcut("within(team.isaz.ark.core.service.PublisherService) " +
-            "&& execution(* *..publish(team.isaz.ark.core.entity.Snippet))")
+    @Pointcut("@annotation(team.isaz.ark.core.aop.annotation.PrepareSnippet)")
     public void prepareSnippet() {
     }
 

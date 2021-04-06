@@ -32,7 +32,9 @@ public class ComplexRequestHelper {
     public BoolQueryBuilder findAvailableSnippets(String author, BoolQueryBuilder mainCondition) {
         BoolQueryBuilder query = new BoolQueryBuilder();
 
-        query.should(QueryBuilders.matchQuery("author", author));
+        if (author != null && !author.isEmpty()) {
+            query.should(QueryBuilders.matchQuery("author", author));
+        }
         query.should(QueryBuilders.matchQuery("hidden", false));
         query.minimumShouldMatch(1);
 

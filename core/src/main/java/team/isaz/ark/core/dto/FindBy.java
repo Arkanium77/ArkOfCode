@@ -1,7 +1,7 @@
 package team.isaz.ark.core.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.With;
 import org.springframework.data.util.Pair;
 
@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @With
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class FindBy {
     private Pair<OffsetDateTime, OffsetDateTime> createDttm;
     private Pair<OffsetDateTime, OffsetDateTime> modifyDttm;

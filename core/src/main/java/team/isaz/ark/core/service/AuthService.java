@@ -14,7 +14,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    UserServiceClient userServiceClient;
+    private final UserServiceClient userServiceClient;
 
     public String getToken(HttpHeaders headers) {
         try {

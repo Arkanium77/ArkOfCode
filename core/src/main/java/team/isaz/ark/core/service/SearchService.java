@@ -16,9 +16,13 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import team.isaz.ark.core.constants.Status;
+import team.isaz.ark.core.dto.TokenCheck;
 import team.isaz.ark.core.entity.Snippet;
 import team.isaz.ark.core.repository.SnippetRepository;
 import team.isaz.ark.core.service.helper.ComplexRequestHelper;
+import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
+import team.isaz.ark.libs.sinsystem.model.sin.AuthenticationSin;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -33,9 +37,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchService {
     private final SnippetRepository snippetRepository;
-    private final @Qualifier("elasticHighLevelClient") RestHighLevelClient client;
+    private final @Qualifier("elasticHighLevelClient")
+    RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final ComplexRequestHelper requestHelper;
+    private final AuthService authService;
 
     public List<Snippet> all() {
         return Lists.newArrayList(snippetRepository.findAll());
@@ -45,9 +51,9 @@ public class SearchService {
         return snippetRepository.findAllByAuthorOrHiddenFalse(author);
     }
 
-    public List<Snippet> find(String author, String search) {
-        List<SearchHit> hits = trySearch(requestHelper
-                                                 .findAvailableSnippets(author, requestHelper.findByString(search)));
+    public List<Snippet> find(String author, String query) {
+        List<SearchHit> hits = trySearch(
+                requestHelper.findAvailableSnippets(author, requestHelper.findByString(query)));
         return hits.stream()
                 .map(hitToSnippet())
                 .filter(Objects::nonNull)
@@ -59,7 +65,7 @@ public class SearchService {
             SearchResponse r = client.search(new SearchRequest("snippets")
                                                      .source(new SearchSourceBuilder()
                                                                      .query(query)
-                                                            ).scroll(TimeValue.timeValueMinutes(1L)),
+                                                     ).scroll(TimeValue.timeValueMinutes(1L)),
                                              RequestOptions.DEFAULT);
 
             ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
@@ -89,5 +95,18 @@ public class SearchService {
                 return null;
             }
         };
+    }
+
+    public List<Snippet> search(String bearerToken, String query) {
+        TokenCheck t = authService.getLogin(bearerToken);
+        if (Status.ERROR.equals(t.getStatus())) {
+            throw new AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode.ERR_CODE_11001);
+        }
+        String login = t.getLogin();
+        return find(login, query);
+    }
+
+    public List<Snippet> search(String query) {
+        return find(null, query);
     }
 }

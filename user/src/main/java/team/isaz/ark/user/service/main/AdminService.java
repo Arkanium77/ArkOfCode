@@ -1,9 +1,9 @@
 package team.isaz.ark.user.service.main;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import team.isaz.ark.user.configuration.jwt.JwtProvider;
 import team.isaz.ark.user.constants.Roles;
 import team.isaz.ark.user.dto.UserInfo;
 import team.isaz.ark.user.entity.RoleEntity;
@@ -15,23 +15,12 @@ import java.util.Objects;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AdminService {
 
     private final UserEntityRepository userEntityRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
     private final RoleEntityRepository roleEntityRepository;
-
-    public AdminService(final UserEntityRepository userEntityRepository,
-                        final PasswordEncoder passwordEncoder,
-                        final RoleEntityRepository roleEntityRepository,
-                        final JwtProvider jwtProvider) {
-        this.userEntityRepository = userEntityRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
-        this.roleEntityRepository = roleEntityRepository;
-    }
-
 
     public void changeUserData(Long id, UserInfo userInfo) {
         if (Objects.isNull(userInfo) || Objects.isNull(userInfo.getLogin()) && Objects.isNull(userInfo.getPassword()))

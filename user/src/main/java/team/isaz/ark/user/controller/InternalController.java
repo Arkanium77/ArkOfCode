@@ -3,7 +3,7 @@ package team.isaz.ark.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +14,8 @@ import team.isaz.ark.user.dto.TokenCheck;
 @RestController
 @RequestMapping("/internal")
 @Tag(name = "Внутренний контроллер",
-        description = "Внутренний контроллер для обращений микросервисов")
-@AllArgsConstructor
+     description = "Внутренний контроллер для обращений микросервисов")
+@RequiredArgsConstructor
 public class InternalController {
     private final JwtProvider jwt;
 

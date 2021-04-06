@@ -1,9 +1,9 @@
 package team.isaz.ark.core.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
@@ -17,7 +17,7 @@ import java.util.Set;
 @Data
 @With
 @Builder
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Document(indexName = "snippets")
 public class Snippet {

@@ -3,7 +3,7 @@ package team.isaz.ark.core.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.SearchRequest;
@@ -30,11 +30,10 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SearchService {
     private final SnippetRepository snippetRepository;
-    private final @Qualifier("elasticHighLevelClient")
-    RestHighLevelClient client;
+    private final @Qualifier("elasticHighLevelClient") RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final ComplexRequestHelper requestHelper;
 
@@ -47,7 +46,8 @@ public class SearchService {
     }
 
     public List<Snippet> find(String author, String search) {
-        List<SearchHit> hits = trySearch(requestHelper.findAvailableSnippets(author, requestHelper.findByString(search)));
+        List<SearchHit> hits = trySearch(requestHelper
+                                                 .findAvailableSnippets(author, requestHelper.findByString(search)));
         return hits.stream()
                 .map(hitToSnippet())
                 .filter(Objects::nonNull)
@@ -57,9 +57,10 @@ public class SearchService {
     private List<SearchHit> trySearch(BoolQueryBuilder query) {
         try {
             SearchResponse r = client.search(new SearchRequest("snippets")
-                    .source(new SearchSourceBuilder()
-                            .query(query)
-                    ).scroll(TimeValue.timeValueMinutes(1L)), RequestOptions.DEFAULT);
+                                                     .source(new SearchSourceBuilder()
+                                                                     .query(query)
+                                                            ).scroll(TimeValue.timeValueMinutes(1L)),
+                                             RequestOptions.DEFAULT);
 
             ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
             clearScrollRequest.addScrollId(r.getScrollId());
@@ -70,8 +71,9 @@ public class SearchService {
             }
             return Arrays.asList(r.getHits().getHits());
         } catch (Exception e) {
-            log.error("Caught {} when trying search by query {}.\n Message: {}", e.getClass().getSimpleName(), query.toString(), e
-                    .getMessage());
+            log.error("Caught {} when trying search by query {}.\n Message: {}", e.getClass().getSimpleName(),
+                      query.toString(), e
+                              .getMessage());
             return Collections.emptyList();
         }
     }
@@ -82,7 +84,8 @@ public class SearchService {
                 return mapper.readValue(hit.getSourceAsString(), Snippet.class)
                         .withId(hit.getId());
             } catch (JsonProcessingException e) {
-                log.error("{}: {}. \n Cause: {}", e.getClass().getSimpleName(), e.getMessage(), e.getCause().getMessage());
+                log.error("{}: {}. \n Cause: {}", e.getClass().getSimpleName(), e.getMessage(),
+                          e.getCause().getMessage());
                 return null;
             }
         };

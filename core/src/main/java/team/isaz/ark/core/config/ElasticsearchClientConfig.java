@@ -1,5 +1,6 @@
 package team.isaz.ark.core.config;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -9,13 +10,10 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 
 @Configuration
+@RequiredArgsConstructor
 public class ElasticsearchClientConfig {
 
     private final ElasticsearchClientProperties properties;
-
-    public ElasticsearchClientConfig(ElasticsearchClientProperties properties) {
-        this.properties = properties;
-    }
 
     @Bean
     public RestHighLevelClient elasticHighLevelClient() {

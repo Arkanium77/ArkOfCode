@@ -1,12 +1,12 @@
 package team.isaz.ark.core.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import team.isaz.ark.core.entity.Snippet;
 import team.isaz.ark.core.repository.SnippetRepository;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PublisherService {
     private final SnippetRepository snippetRepository;
 

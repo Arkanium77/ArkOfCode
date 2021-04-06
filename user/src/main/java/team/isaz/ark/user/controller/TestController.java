@@ -3,6 +3,7 @@ package team.isaz.ark.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +14,14 @@ import team.isaz.ark.libs.sinsystem.model.sin.AuthenticationSin;
 import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
-import java.util.Random;
 import javax.management.ReflectionException;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/public")
 @Tag(name = "Контроллер для тестирования",
-        description = "Используется для публикации тестовых методов")
+     description = "Используется для публикации тестовых методов")
+@RequiredArgsConstructor
 public class TestController {
 
     @SneakyThrows

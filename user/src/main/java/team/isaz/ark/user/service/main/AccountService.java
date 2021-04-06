@@ -1,5 +1,6 @@
 package team.isaz.ark.user.service.main;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AccountService {
     private final UserEntityRepository userEntityRepository;
     private final RoleEntityRepository roleEntityRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-
-    public AccountService(final UserEntityRepository userEntityRepository,
-                       final RoleEntityRepository roleEntityRepository,
-                       final PasswordEncoder passwordEncoder,
-                       final JwtProvider jwtProvider) {
-        this.userEntityRepository = userEntityRepository;
-        this.roleEntityRepository = roleEntityRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
-    }
 
     public UserEntity registerUser(UserInfo userInfo) {
         return register(userInfo.getLogin(), userInfo.getPassword(), getUserRole());

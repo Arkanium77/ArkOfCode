@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,13 +25,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/public")
 @Tag(name = "Контроллер доступа",
-        description = "Используется для регистрации, авторизации, продления токенов")
+     description = "Используется для регистрации, авторизации, продления токенов")
+@RequiredArgsConstructor
 public class AuthController {
     private final AccountService accountService;
-
-    public AuthController(AccountService accountService) {
-        this.accountService = accountService;
-    }
 
     @PostMapping("/register")
     @Operation(

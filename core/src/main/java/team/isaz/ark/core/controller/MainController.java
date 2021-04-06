@@ -3,7 +3,7 @@ package team.isaz.ark.core.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,12 @@ import team.isaz.ark.core.service.AuthService;
 import team.isaz.ark.core.service.PublisherService;
 import team.isaz.ark.core.service.SearchService;
 
-import java.util.List;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @RestController
 @RequestMapping("/main")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MainController {
     private final SearchService searchService;
     private final PublisherService publisherService;

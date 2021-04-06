@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.user.constants.RegexPatterns;
 import team.isaz.ark.user.service.main.UserService;
 
-import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 @Validated
 @RestController
 @RequestMapping("/secured")
 @Tag(name = "Контроллер пользовательских функций",
-        description = "Используется для действий над аккаунтом авторизованного пользователя (Смена пароля, удаление аккаунта и т.д.).")
+     description = "Используется для действий над аккаунтом авторизованного пользователя (Смена пароля, удаление аккаунта и т.д.).")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PutMapping("/change_login")
     @Operation(

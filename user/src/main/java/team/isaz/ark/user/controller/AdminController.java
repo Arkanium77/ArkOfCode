@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,13 +29,10 @@ import javax.validation.constraints.Positive;
 @RestController
 @RequestMapping("/hidden")
 @Tag(name = "Контроллер административных функций",
-        description = "Используется для действий над аккаунтами других пользователей/администраторов.")
+     description = "Используется для действий над аккаунтами других пользователей/администраторов.")
+@RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
-    }
 
     @GetMapping("/id/{login}")
     @Operation(

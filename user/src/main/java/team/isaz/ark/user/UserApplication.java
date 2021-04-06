@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -11,6 +12,7 @@ import java.net.InetAddress;
 
 @Slf4j
 @EnableJpaRepositories
+@EnableFeignClients
 @EnableTransactionManagement
 @SpringBootApplication
 public class UserApplication {

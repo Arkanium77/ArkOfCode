@@ -13,4 +13,5 @@ import team.isaz.ark.user.constants.Status;
 public class TokenCheck {
     private final Status status;
     private final String login;
+    private final String role;
 }

@@ -37,7 +37,7 @@ public class SecuredController {
     @GetMapping
     public ResponseEntity<TokenCheck> getMyLogin(@RequestHeader HttpHeaders headers) {
         String bearerToken = authService.getToken(headers);
-        return ResponseEntity.ok(authService.getLogin(bearerToken));
+        return ResponseEntity.ok(authService.checkToken(bearerToken));
     }
 
     @Operation(

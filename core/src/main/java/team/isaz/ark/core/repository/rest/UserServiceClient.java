@@ -9,6 +9,6 @@ import team.isaz.ark.core.dto.TokenCheck;
 
 @FeignClient(name = "${feign.user.name}", url = "${feign.user.url}")
 public interface UserServiceClient {
-    @RequestMapping(path = "/internal/bearer/login", method = RequestMethod.GET)
-    TokenCheck getLogin(@RequestParam String bearerToken);
+    @RequestMapping(path = "/internal/bearer/check", method = RequestMethod.GET)
+    TokenCheck checkToken(@RequestParam String bearerToken);
 }

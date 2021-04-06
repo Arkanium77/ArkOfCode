@@ -98,7 +98,7 @@ public class SearchService {
     }
 
     public List<Snippet> search(String bearerToken, String query) {
-        TokenCheck t = authService.getLogin(bearerToken);
+        TokenCheck t = authService.checkToken(bearerToken);
         if (Status.ERROR.equals(t.getStatus())) {
             throw new AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode.ERR_CODE_11001);
         }

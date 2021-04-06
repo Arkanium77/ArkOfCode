@@ -38,9 +38,7 @@ public class SnippetPreprocessingAspect {
         if (s.getCreateDttm() == null) {
             s.setCreateDttm(OffsetDateTime.now());
         }
-        if (s.getModifyDttm() == null) {
-            s.setModifyDttm(OffsetDateTime.now());
-        }
+        s.setModifyDttm(OffsetDateTime.now());
         log.info("{}", s);
         return s;
     }

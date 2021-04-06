@@ -9,8 +9,10 @@ import java.util.Set;
 public class Roles {
     public static final String USER = "ROLE_USER";
     public static final String ADMIN = "ROLE_ADMIN";
+    public static final String SERVICE = "ROLE_SERVICE";
 
     public static Set<String> getAllRoles() {
-        return Sets.newHashSet(USER, ADMIN);
+        return Sets.newHashSet(USER, ADMIN, SERVICE);
     }
 }
+

@@ -47,10 +47,27 @@ public class JwtFilter extends GenericFilterBean {
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
             }
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null,
+                                                                                               customUserDetails
+                                                                                                       .getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    public boolean isTokenValid(String token) {
+        if (token != null && jwtProvider.validateToken(token) && jwtProvider.isThatAccessToken(token)) {
+            String userLogin = jwtProvider.getLoginFromToken(token);
+            UUID verifyCode = jwtProvider.getTokenVerifyCode(token);
+            CustomUserDetails customUserDetails = customUserDetailsService.loadUserByUsername(userLogin);
+            if (!verifyCode.equals(customUserDetails.getTokenVerifyCode())) {
+                log.info("Token verify code from token don't equals code received from service");
+                log.debug("login: {}, corrupted verifyCode  {}", userLogin, verifyCode);
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
+import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 import team.isaz.ark.user.configuration.jwt.JwtProvider;
 import team.isaz.ark.user.constants.Roles;
 import team.isaz.ark.user.dto.Tokens;
@@ -32,10 +34,10 @@ public class AccountService {
         log.info("Trying register \"{}\" with role {}", login, role.getName());
         log.info("Password {} => {}", password, passwordEncoder.encode(password));
         UserEntity userEntity = userEntityRepository.save(UserEntity.builder()
-                .login(login)
-                .password(passwordEncoder.encode(password))
-                .role(role)
-                .build());
+                                                                  .login(login)
+                                                                  .password(passwordEncoder.encode(password))
+                                                                  .role(role)
+                                                                  .build());
         log.info("Successful registration! \"{}\" id is {}", login, userEntity.getId());
         return userEntity;
     }
@@ -67,17 +69,30 @@ public class AccountService {
                 .orElse(null);
     }
 
+    public Tokens internalLogin(String login) {
+        Optional<UserEntity> userEntity = userEntityRepository.findByLogin(login);
+        return userEntity
+                .map(jwtProvider::generateTokens)
+                .orElseThrow(() -> new InternalSin(ArkOfSinCodes.InternalErrorCode.ERR_CODE_10000,
+                                                   "Не удалось получить привелегии для обновления сниппетов"));
+    }
+
     public Optional<UserEntity> findByLogin(String username) {
         log.debug("Searching user \"{}\"", username);
         return userEntityRepository.findByLogin(username);
     }
 
     public Tokens refreshToken(String refreshToken) {
-        if (!jwtProvider.validateToken(refreshToken)) throw new RuntimeException("It's not valid token!");
-        if (jwtProvider.isThatAccessToken(refreshToken)) throw new RuntimeException("It's not refresh token!");
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("It's not valid token!");
+        }
+        if (jwtProvider.isThatAccessToken(refreshToken)) {
+            throw new RuntimeException("It's not refresh token!");
+        }
         String login = jwtProvider.getLoginFromToken(refreshToken);
         log.info("Refreshing token for {}", login);
-        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Unexpected error: token valid, but user not found!"));
+        UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(
+                () -> new RuntimeException("Unexpected error: token valid, but user not found!"));
         Tokens tokens = jwtProvider.generateTokens(userEntity);
         log.info("Token successful refreshed");
         return tokens;

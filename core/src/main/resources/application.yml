@@ -12,8 +12,8 @@ elastic-search:
 
 feign:
   client.config.default:
-    readTimeout: 5000
-    connectTimeout: 5000
+    readTimeout: 15000
+    connectTimeout: 15000
     hystrix:
       enabled: false
   user:

@@ -9,6 +9,8 @@ import java.util.List;
 public interface SnippetRepository extends ElasticsearchRepository<Snippet, String> {
     List<Snippet> findAllByAuthorOrHiddenFalse(String author);
 
+    List<Snippet> findAllByAuthor(String author);
+
     @PrepareSnippet
     Snippet save(Snippet snippet);
 

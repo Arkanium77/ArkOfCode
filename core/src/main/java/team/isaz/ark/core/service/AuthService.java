@@ -24,7 +24,7 @@ public class AuthService {
         }
     }
 
-    public TokenCheck getLogin(String bearerToken) {
-        return userServiceClient.getLogin(bearerToken);
+    public TokenCheck checkToken(String bearerToken) {
+        return userServiceClient.checkToken(bearerToken);
     }
 }

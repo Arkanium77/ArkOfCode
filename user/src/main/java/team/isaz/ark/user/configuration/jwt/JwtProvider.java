@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import team.isaz.ark.user.aop.annotation.PrepareToken;
+import team.isaz.ark.user.constants.Status;
+import team.isaz.ark.user.dto.TokenCheck;
 import team.isaz.ark.user.dto.Tokens;
 import team.isaz.ark.user.entity.UserEntity;
 
@@ -27,8 +29,10 @@ public class JwtProvider {
 
     public Tokens generateTokens(UserEntity entity) {
         return Tokens.builder()
-                .accessToken(getAccessToken(entity.getLogin(), entity.getRole().getName(), entity.getTokenVerifyCode().toString()))
-                .refreshToken(getRefreshToken(entity.getLogin(), entity.getRole().getName(), entity.getTokenVerifyCode().toString()))
+                .accessToken(getAccessToken(entity.getLogin(), entity.getRole().getName(),
+                                            entity.getTokenVerifyCode().toString()))
+                .refreshToken(getRefreshToken(entity.getLogin(), entity.getRole().getName(),
+                                              entity.getTokenVerifyCode().toString()))
                 .build();
     }
 
@@ -46,7 +50,8 @@ public class JwtProvider {
                 .claim("role", role)
                 .claim("token_verify_code", tokenVerifyCode)
                 .claim("token_type", isAccessToken)
-                .setExpiration(Date.from(LocalDate.now().plusDays(lifetime).atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(LocalDate.now().plusDays(lifetime).atStartOfDay(ZoneId.systemDefault())
+                                                 .toInstant()))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -80,5 +85,17 @@ public class JwtProvider {
         return UUID.fromString((String) claims.get("token_verify_code"));
     }
 
-
+    @PrepareToken
+    public TokenCheck getInfoFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+            return TokenCheck.builder()
+                    .status(Status.OK)
+                    .login((String) claims.get("login"))
+                    .role((String) claims.get("role"))
+                    .build();
+        } catch (Exception e) {
+            return TokenCheck.builder().status(Status.ERROR).build();
+        }
+    }
 }

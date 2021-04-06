@@ -18,6 +18,16 @@ spring:
       hibernate:
         default_schema: main
 
+feign:
+  client.config.default:
+    readTimeout: 15000
+    connectTimeout: 15000
+    hystrix:
+      enabled: false
+  core:
+    name: core
+    url: http://localhost:30301/
+
 jwt:
   secret: jwtsecretword
   token.lifetime:

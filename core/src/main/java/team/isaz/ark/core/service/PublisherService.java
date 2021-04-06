@@ -24,7 +24,7 @@ public class PublisherService {
     }
 
     public Status publish(String bearerToken, boolean hidden, String title, Set<String> tags, String text) {
-        TokenCheck t = authService.getLogin(bearerToken);
+        TokenCheck t = authService.checkToken(bearerToken);
         if (Status.ERROR.equals(t.getStatus())) {
             throw new AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode.ERR_CODE_11001);
         }

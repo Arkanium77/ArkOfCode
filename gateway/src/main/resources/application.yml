@@ -1,19 +1,24 @@
 server:
-  port: 30301
+  port: 30309
 spring:
   application:
-    name: ark-core
+    name: ark-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-elastic-search:
-  scheme: http
-  hosts: localhost
-  ports: 9200
-  initial-import:
-    enabled: false
+      routes:
+        - id: core
+          uri: lb://ARK-CORE
+          filters:
+            - RewritePath=/core/(?<path>.*), /$\{path}
+          predicates:
+            - Path=/core/**
+        - id: consumerModule
+          uri: lb://ARK-USER
+          filters:
+            - RewritePath=/user/(?<path>.*), /$\{path}
+          predicates:
+            - Path=/user/**
+
 
 eureka:
   client:
@@ -23,15 +28,6 @@ eureka:
     preferIpAddress: true
     lease-expiration-duration-in-seconds: 90
     lease-renewal-interval-in-seconds: 30
-
-feign:
-  client.config.default:
-    readTimeout: 15000
-    connectTimeout: 15000
-    hystrix:
-      enabled: false
-  user:
-    name: user
 
 management:
   info:
@@ -48,6 +44,8 @@ management:
       show-details: always
   endpoints:
     web:
+      exposure:
+        include: "*"
       cors:
         allowed-origins: "*"
         allowed-methods: GET

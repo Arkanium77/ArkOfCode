@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import team.isaz.ark.user.constants.Status;
 
-@FeignClient(name = "${feign.core.name}", url = "${feign.core.url}")
+@FeignClient(name = "${feign.core.name}")
 public interface CoreServiceClient {
     @RequestMapping(path = "/internal/snippets/login", method = RequestMethod.PUT)
     Status updateLogin(@RequestParam String login, @RequestParam String newLogin,

@@ -17,6 +17,11 @@ spring:
     properties:
       hibernate:
         default_schema: main
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
 
 eureka:
   client:

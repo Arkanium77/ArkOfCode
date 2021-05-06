@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import team.isaz.ark.core.dto.TokenCheck;
 
-@FeignClient(name = "${feign.user.name}", url = "${feign.user.url}")
+@FeignClient(name = "${feign.user.name}")
 public interface UserServiceClient {
     @RequestMapping(path = "/internal/bearer/check", method = RequestMethod.GET)
     TokenCheck checkToken(@RequestParam String bearerToken);

@@ -9,13 +9,17 @@ spring:
         - id: core
           uri: lb://ARK-CORE
           filters:
-            - RewritePath=/core/(?<path>.*), /$\{path}
+            - RewritePath=/core/internal/(?<path>.*), /public/error
+            - RewritePath=/core/public/(?<path>.*), /public/$\{path}
+            - RewritePath=/core/secured/(?<path>.*), /secured/$\{path}
           predicates:
             - Path=/core/**
-        - id: consumerModule
+        - id: user
           uri: lb://ARK-USER
           filters:
-            - RewritePath=/user/(?<path>.*), /$\{path}
+            - RewritePath=/user/internal/(?<path>.*), /public/error
+            - RewritePath=/user/public/(?<path>.*), /public/$\{path}
+            - RewritePath=/user/secured/(?<path>.*), /secured/$\{path}
           predicates:
             - Path=/user/**
 

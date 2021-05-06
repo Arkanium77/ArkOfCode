@@ -85,10 +85,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <!-- springdoc OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>

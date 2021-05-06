@@ -12,11 +12,11 @@
         </encoder>
     </appender>
 
-    <logger name="team.isaz" level="DEBUG" additivity="false">
+    <logger name="team.isaz" level="TRACE" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
 
-    <root level="WARN">
+    <root level="TRACE">
         <appender-ref ref="Console"/>
     </root>
 

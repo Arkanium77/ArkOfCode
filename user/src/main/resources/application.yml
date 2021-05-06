@@ -18,6 +18,9 @@ spring:
       hibernate:
         default_schema: main
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
     gateway:
       discovery:
         locator:
@@ -39,7 +42,7 @@ feign:
     hystrix:
       enabled: false
   core:
-    name: core
+    name: ark-core
 
 jwt:
   secret: jwtsecretword

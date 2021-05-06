@@ -1,13 +1,15 @@
 package team.isaz.ark.core.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.core.entity.Snippet;
-import team.isaz.ark.core.service.PublisherService;
 import team.isaz.ark.core.service.SearchService;
 
 import javax.validation.constraints.NotBlank;
@@ -18,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PublicController {
     private final SearchService searchService;
-    private final PublisherService publisherService;
 
     @Operation(
             summary = "Поиск сниппетов",
@@ -29,23 +30,14 @@ public class PublicController {
         return new ResponseEntity<>(searchService.search(query), HttpStatus.OK);
     }
 
-    //-- На удаление
 
-    @GetMapping("/get")
-    public ResponseEntity<List<Snippet>> getAll() {
-        return new ResponseEntity<>(searchService.all(), HttpStatus.OK);
+    @Operation(
+            summary = "Получение сниппета",
+            description = "Получение сниппета по айди для неавторизованного пользователя (только публичные)"
+    )
+    @GetMapping("/get/{snippetId}")
+    public ResponseEntity<Snippet> get(@PathVariable String snippetId) {
+        return new ResponseEntity<>(searchService.get(snippetId), HttpStatus.OK);
     }
 
-    @GetMapping("/get/{author}")
-    public ResponseEntity<List<Snippet>> getAllAvailable(@PathVariable @NotBlank String author) {
-        return new ResponseEntity<>(searchService.allAvailable(author), HttpStatus.OK);
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<String> response(
-            @Schema(name = "NAME",
-                    description = "DESCRIPTION")
-            @RequestBody Snippet snippet) {
-        return new ResponseEntity<>(publisherService.publish(snippet).name(), HttpStatus.OK);
-    }
 }

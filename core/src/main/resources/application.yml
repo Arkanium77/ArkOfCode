@@ -4,6 +4,9 @@ spring:
   application:
     name: ark-core
   cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
     gateway:
       discovery:
         locator:
@@ -31,7 +34,7 @@ feign:
     hystrix:
       enabled: false
   user:
-    name: user
+    name: ark-user
 
 management:
   info:

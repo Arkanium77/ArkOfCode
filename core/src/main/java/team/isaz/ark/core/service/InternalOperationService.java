@@ -26,11 +26,11 @@ public class InternalOperationService {
         log.debug("TokenCheckResult = {}", role);
         if (role.getStatus() == null || role.getStatus().equals(Status.ERROR)) {
             throw new AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode.ERR_CODE_11000,
-                                        "Не удалось извлечь роль из токена");
+                    "Не удалось извлечь роль из токена");
         }
         if (!Roles.SERVICE.equals(role.getRole())) {
             throw new AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode.ERR_CODE_11000,
-                                        "Уровень полномочий не соответствует необходимому для совершения операции");
+                    "Уровень полномочий не соответствует необходимому для совершения операции");
         }
         log.info("Starting update operation...");
         List<Snippet> snippets = snippetRepository

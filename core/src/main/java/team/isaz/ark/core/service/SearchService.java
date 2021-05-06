@@ -2,7 +2,6 @@ package team.isaz.ark.core.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.ClearScrollRequest;
@@ -23,6 +22,7 @@ import team.isaz.ark.core.repository.SnippetRepository;
 import team.isaz.ark.core.service.helper.ComplexRequestHelper;
 import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
 import team.isaz.ark.libs.sinsystem.model.sin.AuthenticationSin;
+import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,14 +43,6 @@ public class SearchService {
     private final ComplexRequestHelper requestHelper;
     private final AuthService authService;
 
-    public List<Snippet> all() {
-        return Lists.newArrayList(snippetRepository.findAll());
-    }
-
-    public List<Snippet> allAvailable(String author) {
-        return snippetRepository.findAllByAuthorOrHiddenFalse(author);
-    }
-
     public List<Snippet> find(String author, String query) {
         List<SearchHit> hits = trySearch(
                 requestHelper.findAvailableSnippets(author, requestHelper.findByString(query)));
@@ -63,10 +55,10 @@ public class SearchService {
     private List<SearchHit> trySearch(BoolQueryBuilder query) {
         try {
             SearchResponse r = client.search(new SearchRequest("snippets")
-                                                     .source(new SearchSourceBuilder()
-                                                                     .query(query)
-                                                     ).scroll(TimeValue.timeValueMinutes(1L)),
-                                             RequestOptions.DEFAULT);
+                            .source(new SearchSourceBuilder()
+                                    .query(query)
+                            ).scroll(TimeValue.timeValueMinutes(1L)),
+                    RequestOptions.DEFAULT);
 
             ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
             clearScrollRequest.addScrollId(r.getScrollId());
@@ -78,8 +70,8 @@ public class SearchService {
             return Arrays.asList(r.getHits().getHits());
         } catch (Exception e) {
             log.error("Caught {} when trying search by query {}.\n Message: {}", e.getClass().getSimpleName(),
-                      query.toString(), e
-                              .getMessage());
+                    query.toString(), e
+                            .getMessage());
             return Collections.emptyList();
         }
     }
@@ -91,7 +83,7 @@ public class SearchService {
                         .withId(hit.getId());
             } catch (JsonProcessingException e) {
                 log.error("{}: {}. \n Cause: {}", e.getClass().getSimpleName(), e.getMessage(),
-                          e.getCause().getMessage());
+                        e.getCause().getMessage());
                 return null;
             }
         };
@@ -108,5 +100,24 @@ public class SearchService {
 
     public List<Snippet> search(String query) {
         return find(null, query);
+    }
+
+    public Snippet get(String bearerToken, String snippetId) {
+        String login = authService.getLogin(bearerToken);
+        Snippet snippet = snippetRepository.findById(snippetId)
+                .orElseThrow(() -> new ValidationSin("Snippet with id " + snippetId + " was not found"));
+        if (snippet.isHidden() && !snippet.getAuthor().equals(login)) {
+            throw new ValidationSin("Snippet with id " + snippetId + " hidden for user [" + login + "]");
+        }
+        return snippet;
+    }
+
+    public Snippet get(String snippetId) {
+        Snippet snippet = snippetRepository.findById(snippetId)
+                .orElseThrow(() -> new ValidationSin("Snippet with id " + snippetId + " was not found"));
+        if (snippet.isHidden()) {
+            throw new ValidationSin("Snippet with id " + snippetId + " is hidden");
+        }
+        return snippet;
     }
 }

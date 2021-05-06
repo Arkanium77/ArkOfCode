@@ -14,6 +14,4 @@ public interface SnippetRepository extends ElasticsearchRepository<Snippet, Stri
     @PrepareSnippet
     Snippet save(Snippet snippet);
 
-    List<Snippet> findAllByAuthorAndTitleOrTextOrTagsContainsOrderByModifyDttmAsc(String author, String title,
-                                                                                  String text, String tag);
 }

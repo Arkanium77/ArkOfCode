@@ -1,0 +1,34 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: ark-eureka
+eureka:
+  server:
+    expected-client-renewal-interval-seconds: 10
+    enable-self-preservation: false
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  instance:
+    preferIpAddress: true
+logging:
+  level:
+    root: INFO
+    ru.gismu.esfl: DEBUG
+management:
+  info:
+    git:
+      mode: full
+  endpoint:
+    info:
+      enabled: true
+    logfile:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "*"
+        allowed-methods: GET

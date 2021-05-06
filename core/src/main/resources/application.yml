@@ -10,6 +10,15 @@ elastic-search:
   initial-import:
     enabled: false
 
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+  instance:
+    preferIpAddress: true
+    lease-expiration-duration-in-seconds: 90
+    lease-renewal-interval-in-seconds: 30
+
 feign:
   client.config.default:
     readTimeout: 15000
@@ -18,7 +27,6 @@ feign:
       enabled: false
   user:
     name: user
-    url: http://localhost:30302/
 
 management:
   info:

@@ -21,7 +21,7 @@ public class InternalOperationService {
     private final AuthService authService;
     private final SnippetRepository snippetRepository;
 
-    public Status updateLogin(String login, String newLogin, String bearerToken) {
+    public void updateLogin(String login, String newLogin, String bearerToken) {
         TokenCheck role = authService.checkToken(bearerToken);
         log.debug("TokenCheckResult = {}", role);
         if (role.getStatus() == null || role.getStatus().equals(Status.ERROR)) {
@@ -39,6 +39,5 @@ public class InternalOperationService {
                 .map(snippetRepository::save)
                 .collect(Collectors.toList());
         log.info("Updated {} snippets", snippets.size());
-        return Status.OK;
     }
 }

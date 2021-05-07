@@ -31,7 +31,8 @@ public class InternalController {
     public ResponseEntity<Status> updateLogin(@RequestHeader HttpHeaders headers, @RequestParam String login,
                                               @RequestParam String newLogin) {
         String bearerToken = authService.getToken(headers);
-        return new ResponseEntity<>(internalOperationService.updateLogin(login, newLogin, bearerToken), HttpStatus.OK);
+        internalOperationService.updateLogin(login, newLogin, bearerToken);
+        return new ResponseEntity<>(Status.OK, HttpStatus.OK);
     }
 
 }

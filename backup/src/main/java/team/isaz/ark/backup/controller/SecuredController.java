@@ -42,7 +42,8 @@ public class SecuredController {
     )
     @PostMapping("/restore")
     public ResponseEntity<Response> restore(@RequestHeader HttpHeaders headers,
-                                            @RequestParam(name = "Путь к папке резервного копирования") String path) {
+                                            @RequestParam(name = "Путь к папке резервного копирования", required = false)
+                                                    String path) {
         authService.checkAdmin(headers);
         return new ResponseEntity<>(backupService.restore(path), HttpStatus.OK);
     }

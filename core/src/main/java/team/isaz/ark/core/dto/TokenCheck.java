@@ -1,17 +1,17 @@
 package team.isaz.ark.core.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import team.isaz.ark.core.constants.Status;
 
-@Builder
 @Getter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class TokenCheck {
-    private final Status status;
-    private final String login;
-    private final String role;
+    private Status status;
+    private String login;
+    private String role;
 }

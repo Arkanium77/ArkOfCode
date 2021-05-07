@@ -1,5 +1,6 @@
 package team.isaz.ark.backup.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import team.isaz.ark.backup.dto.Response;
 import team.isaz.ark.backup.entity.Snippet;
 import team.isaz.ark.backup.repository.SnippetRepository;
 import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
+import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
 import java.io.File;
 import java.util.List;
@@ -26,7 +28,7 @@ public class BackupService {
 
     public Response backup(String path) {
         path = getCorrectPath(path);
-        int pageSize = 100;
+        int pageSize = 6;
         String data = "data";
         String json = ".json";
         long count = 0;
@@ -52,6 +54,33 @@ public class BackupService {
                 .ok("Backup complete! Successfully saved data of "
                         + count + "/" + snippetRepository.count() + " snippets");
     }
+
+    @SneakyThrows
+    public Response restore(String path) {
+        path = getCorrectPath(path);
+        File[] list = getFiles(path);
+        long count = 0;
+        for (File f : list) {
+            if (!f.canRead()) {
+                throw new InternalSin("Cant read file " + f.getAbsolutePath());
+            }
+            List<Snippet> snippets = mapper.readValue(f, new TypeReference<List<Snippet>>() {
+            });
+            log.info("File {} contains {} snippets", f.getName(), snippets.size());
+            snippetRepository.saveAll(snippets);
+            count += snippets.size();
+        }
+        return Response.ok("Successfully restored " + count + " snippets");
+    }
+
+    private String getCorrectPath(String path) {
+        if (path == null || path.replaceAll("\\s", "").isEmpty()) {
+            log.info("Received path null or empty. Backup will be created in default dir");
+            path = System.getProperty("user.dir") + File.separator + "automatic_backup";
+        }
+        return path;
+    }
+
 
     @SneakyThrows
     private void saveContent(String path, List<Snippet> list) {
@@ -81,15 +110,17 @@ public class BackupService {
         }
     }
 
-    public Response restore(String path) {
-        return null;
+    private File[] getFiles(String path) {
+        File d = new File(path);
+        if (!d.exists()) {
+            throw new ValidationSin("Validation error: directory with backup is not exists!");
+        }
+
+        File[] list = d.listFiles();
+        if (list == null || list.length == 0) {
+            throw new ValidationSin("Validation error: directory with backup is empty!");
+        }
+        return list;
     }
 
-    public String getCorrectPath(String path) {
-        if (path == null || path.replaceAll("\\s", "").isEmpty()) {
-            log.info("Received path null or empty. Backup will be created in default dir");
-            path = System.getProperty("user.dir") + File.separator + "automatic_backup";
-        }
-        return path;
-    }
 }

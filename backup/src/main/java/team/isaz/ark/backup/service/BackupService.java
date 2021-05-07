@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import team.isaz.ark.backup.dto.Response;
 import team.isaz.ark.backup.entity.Snippet;
@@ -26,9 +27,25 @@ public class BackupService {
     private final ObjectWriter writer;
     private final ObjectMapper mapper;
 
+    /**
+     * Автоматическое копирование.
+     * Место назначения - стандартная директория.
+     * Копирование происходит каждые 30 дней (значение задано в милисекундах)
+     */
+    @Scheduled(fixedDelayString = "2592000000")
+    public void automaticBackup() {
+        log.info("Automatic backup started");
+        try {
+            Response r = backup(null);
+            log.info("Automatic backup end. Status: {}, Description: {}", r.getStatus(), r.getDescription());
+        } catch (Exception e) {
+            log.warn("Automatic backup fail! Caught {}: {}\nTrace:\n", e.getClass().getSimpleName(), e.getMessage(), e);
+        }
+    }
+
     public Response backup(String path) {
         path = getCorrectPath(path);
-        int pageSize = 6;
+        int pageSize = 100;
         String data = "data";
         String json = ".json";
         long count = 0;

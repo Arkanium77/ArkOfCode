@@ -15,12 +15,12 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>backup</module>
         <module>user</module>
         <module>core</module>
         <module>libs</module>
         <module>gateway</module>
         <module>eureka</module>
-        <module>backup</module>
     </modules>
 
 </project>

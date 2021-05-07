@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>backup</module>
         <module>user</module>
         <module>core</module>
         <module>libs</module>

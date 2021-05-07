@@ -22,6 +22,14 @@ spring:
             - RewritePath=/user/secured/(?<path>.*), /secured/$\{path}
           predicates:
             - Path=/user/**
+        - id: backup
+          uri: lb://ARK-BACKUP
+          filters:
+            - RewritePath=/backup/internal/(?<path>.*), /public/error
+            - RewritePath=/backup/public/(?<path>.*), /public/$\{path}
+            - RewritePath=/backup/secured/(?<path>.*), /secured/$\{path}
+          predicates:
+            - Path=/backup/**
 
 
 eureka:

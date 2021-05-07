@@ -1,0 +1,56 @@
+server:
+  port: 30303
+spring:
+  application:
+    name: ark-backup
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+elastic-search:
+  scheme: http
+  hosts: localhost
+  ports: 9200
+  initial-import:
+    enabled: false
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+  instance:
+    preferIpAddress: true
+    lease-expiration-duration-in-seconds: 90
+    lease-renewal-interval-in-seconds: 30
+
+feign:
+  client.config.default:
+    readTimeout: 15000
+    connectTimeout: 15000
+    hystrix:
+      enabled: false
+  user:
+    name: ark-user
+
+management:
+  info:
+    git:
+      mode: full
+  endpoint:
+    refresh:
+      enabled: true
+    info:
+      enabled: true
+    logfile:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "*"
+        allowed-methods: GET

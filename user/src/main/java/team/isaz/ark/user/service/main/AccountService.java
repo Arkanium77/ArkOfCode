@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
 import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
+import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 import team.isaz.ark.user.configuration.jwt.JwtProvider;
 import team.isaz.ark.user.constants.Roles;
 import team.isaz.ark.user.dto.Tokens;
@@ -31,20 +32,24 @@ public class AccountService {
     }
 
     private UserEntity register(String login, String password, RoleEntity role) {
+        if (userEntityRepository.existsByLogin(login)) {
+            throw new ValidationSin("User with this login (" + login + ") already exists!");
+        }
+
         log.info("Trying register \"{}\" with role {}", login, role.getName());
         log.info("Password {} => {}", password, passwordEncoder.encode(password));
         UserEntity userEntity = userEntityRepository.save(UserEntity.builder()
-                                                                  .login(login)
-                                                                  .password(passwordEncoder.encode(password))
-                                                                  .role(role)
-                                                                  .build());
+                .login(login)
+                .password(passwordEncoder.encode(password))
+                .role(role)
+                .build());
         log.info("Successful registration! \"{}\" id is {}", login, userEntity.getId());
         return userEntity;
     }
 
     private RoleEntity getUserRole() {
         return roleEntityRepository.findById(Roles.USER)
-                .orElseThrow(() -> new RuntimeException("Can't find basic \"USER\" role"));
+                .orElseThrow(() -> new InternalSin("Can't find basic \"USER\" role"));
     }
 
     private Optional<UserEntity> login(String login, String password) {
@@ -74,7 +79,7 @@ public class AccountService {
         return userEntity
                 .map(jwtProvider::generateTokens)
                 .orElseThrow(() -> new InternalSin(ArkOfSinCodes.InternalErrorCode.ERR_CODE_10000,
-                                                   "Не удалось получить привелегии для обновления сниппетов"));
+                        "Не удалось получить привелегии для обновления сниппетов"));
     }
 
     public Optional<UserEntity> findByLogin(String username) {
@@ -84,15 +89,15 @@ public class AccountService {
 
     public Tokens refreshToken(String refreshToken) {
         if (!jwtProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("It's not valid token!");
+            throw new ValidationSin("It's not valid token!");
         }
         if (jwtProvider.isThatAccessToken(refreshToken)) {
-            throw new RuntimeException("It's not refresh token!");
+            throw new ValidationSin("It's not refresh token!");
         }
         String login = jwtProvider.getLoginFromToken(refreshToken);
         log.info("Refreshing token for {}", login);
         UserEntity userEntity = userEntityRepository.findByLogin(login).orElseThrow(
-                () -> new RuntimeException("Unexpected error: token valid, but user not found!"));
+                () -> new InternalSin("Unexpected error: token valid, but user not found!"));
         Tokens tokens = jwtProvider.generateTokens(userEntity);
         log.info("Token successful refreshed");
         return tokens;

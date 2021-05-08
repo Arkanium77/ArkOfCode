@@ -15,7 +15,7 @@ eureka:
 logging:
   level:
     root: INFO
-    ru.gismu.esfl: DEBUG
+    team.isaz.ark: DEBUG
 management:
   info:
     git:

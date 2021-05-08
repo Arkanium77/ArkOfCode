@@ -25,7 +25,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/public")
 @Tag(name = "Контроллер доступа",
-     description = "Используется для регистрации, авторизации, продления токенов")
+        description = "Используется для регистрации, авторизации, продления токенов")
 @RequiredArgsConstructor
 public class AuthController {
     private final AccountService accountService;
@@ -40,9 +40,10 @@ public class AuthController {
     public ResponseEntity<String> registerUser(@Valid
                                                @RequestBody
                                                @Schema(required = true,
-                                                       description = "Информация о пользователе (логин, пароль)") UserInfo userInfo) {
+                                                       description = "Информация о пользователе (логин, пароль)")
+                                                       UserInfo userInfo) {
         UserEntity userEntity = accountService.registerUser(userInfo);
-        return new ResponseEntity<>(userEntity.getLogin() + ", registration success! Now auth with your password.", HttpStatus.OK);
+        return ResponseEntity.ok(userEntity.getLogin() + ", registration success! Now auth with your password.");
     }
 
     @PostMapping("/auth")
@@ -60,7 +61,7 @@ public class AuthController {
         Tokens tokens = accountService.login(request);
         return tokens == null ?
                 new ResponseEntity<>("Login failed! Try again!", HttpStatus.UNAUTHORIZED) :
-                new ResponseEntity<>(tokens, HttpStatus.OK);
+                ResponseEntity.ok(tokens);
     }
 
     @GetMapping("/refresh")
@@ -75,6 +76,6 @@ public class AuthController {
                                                        description = "Актуальный refresh-токен")
                                                        String refreshToken) {
         Tokens tokens = accountService.refreshToken(refreshToken);
-        return new ResponseEntity<>(tokens, HttpStatus.OK);
+        return ResponseEntity.ok(tokens);
     }
 }

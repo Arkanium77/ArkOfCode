@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.springframework.stereotype.Component;
+import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 
 import java.util.Arrays;
 
@@ -34,7 +35,7 @@ public class TokenAspect {
             return jp.proceed(args);
         } catch (Throwable throwable) {
             log.error("Unexpected {} : {}", throwable.getClass().getSimpleName(), throwable.getMessage());
-            throw new RuntimeException(throwable);
+            throw new InternalSin(throwable);
         }
     }
 

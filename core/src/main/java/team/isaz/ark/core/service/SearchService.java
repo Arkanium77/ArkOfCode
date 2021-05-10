@@ -37,8 +37,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchService {
     private final SnippetRepository snippetRepository;
-    private final @Qualifier("elasticHighLevelClient")
-    RestHighLevelClient client;
+    @Qualifier("elasticHighLevelClient")
+    private final RestHighLevelClient client;
     private final ObjectMapper mapper;
     private final ComplexRequestHelper requestHelper;
     private final AuthService authService;

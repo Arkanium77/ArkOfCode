@@ -17,7 +17,11 @@ import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -43,8 +47,8 @@ public class BackupService {
         }
     }
 
-    public Response backup(String path) {
-        path = getCorrectPath(path);
+    public Response backup(String originPath) {
+        String path = getCorrectPath(originPath);
         int pageSize = 100;
         String data = "data";
         String json = ".json";
@@ -53,18 +57,27 @@ public class BackupService {
         int elementCount = page.getNumberOfElements();
         if (elementCount != 0) {
             createDirectory(path);
+            List<CompletableFuture<Integer>> features = new ArrayList<>();
             while (true) {
-                String file = new File(path, data + page.getNumber() + json).getAbsolutePath();
-                log.info("Processing file {}", file);
-                saveContent(file, page.getContent());
-                count += elementCount;
-                log.info("Processing file {} complete. File contains {} snippets", file, elementCount);
+                int currentPageElementCount = elementCount;
+                Page<Snippet> currentPage = page;
+                features.add(CompletableFuture.supplyAsync(() -> {
+                    String file = new File(path, data + currentPage.getNumber() + json).getAbsolutePath();
+                    log.info("Processing file {}", file);
+                    saveContent(file, currentPage.getContent());
+                    log.info("Processing file {} complete. File contains {} snippets", file, currentPageElementCount);
+                    return currentPageElementCount;
+                }));
                 if (page.isLast()) {
                     break;
                 }
                 page = snippetRepository.findAll(page.nextPageable());
                 elementCount = page.getNumberOfElements();
             }
+            count = features.parallelStream()
+                    .map(CompletableFuture::join)
+                    .mapToInt(i -> i)
+                    .sum();
         }
         log.info("Backup complete! Successfully saved data of {}/{} snippets", count, snippetRepository.count());
         return Response
@@ -72,21 +85,31 @@ public class BackupService {
                         + count + "/" + snippetRepository.count() + " snippets");
     }
 
-    @SneakyThrows
     public Response restore(String path) {
         path = getCorrectPath(path);
         File[] list = getFiles(path);
-        long count = 0;
-        for (File f : list) {
-            if (!f.canRead()) {
-                throw new InternalSin("Cant read file " + f.getAbsolutePath());
-            }
-            List<Snippet> snippets = mapper.readValue(f, new TypeReference<List<Snippet>>() {
-            });
-            log.info("File {} contains {} snippets", f.getName(), snippets.size());
-            snippetRepository.saveAll(snippets);
-            count += snippets.size();
-        }
+        long count = Arrays.stream(list).parallel()
+                .map(f -> CompletableFuture.supplyAsync(() -> {
+                    if (!f.canRead()) {
+                        log.error("Can't read file {}", f.getAbsolutePath());
+                        return 0;
+                    }
+                    List<Snippet> snippets;
+                    try {
+                        snippets = mapper.readValue(f, new TypeReference<List<Snippet>>() {
+                        });
+                    } catch (IOException e) {
+                        log.error("IOException when reading {}. {}:\n",
+                                f.getAbsolutePath(), e.getClass().getSimpleName(), e);
+                        return 0;
+                    }
+                    log.info("File {} contains {} snippets", f.getName(), snippets.size());
+                    snippetRepository.saveAll(snippets);
+                    return snippets.size();
+                }))
+                .map(CompletableFuture::join)
+                .mapToInt(i -> i)
+                .sum();
         return Response.ok("Successfully restored " + count + " snippets");
     }
 

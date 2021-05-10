@@ -27,7 +27,8 @@ public class LoggingAspect {
     @AfterThrowing(value = "debugLog()", throwing = "t")
     public void afterThrow(JoinPoint jp, Throwable t) {
         CodeSignature methodSignature = (CodeSignature) jp.getSignature();
-        log.error("{} throws unexpected {} : {}", methodSignature.getName(), t.getClass().getSimpleName(), t.getMessage());
+        log.error("{} throws unexpected {} : {}",
+                methodSignature.getName(), t.getClass().getSimpleName(), t.getMessage());
     }
 
     @AfterReturning(value = "debugLog()", returning = "result")
@@ -38,14 +39,17 @@ public class LoggingAspect {
         } else {
             if (result != null) {
                 if (result.toString().length() < MAX_LENGTH) {
-                    log.debug("The method {} has correctly completed the work and return:\n\t- {}", methodSignature.getName(), result);
+                    log.debug("The method {} has correctly completed the work and return:\n\t- {}",
+                            methodSignature.getName(), result);
                 } else {
-                    log.debug("The method {} has correctly completed the work and return {}", methodSignature.getName(), result.getClass().getSimpleName());
+                    log.debug("The method {} has correctly completed the work and return {}",
+                            methodSignature.getName(), result.getClass().getSimpleName());
 
                 }
 
             } else {
-                log.debug("The method {} has correctly completed the work and return NULL value", methodSignature.getName());
+                log.debug("The method {} has correctly completed the work and return NULL value",
+                        methodSignature.getName());
             }
         }
     }

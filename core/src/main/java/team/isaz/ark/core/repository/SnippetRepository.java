@@ -10,7 +10,7 @@ public interface SnippetRepository extends ElasticsearchRepository<Snippet, Stri
 
     List<Snippet> findAllByAuthor(String author);
 
-    @Override
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @PrepareSnippet
     Snippet save(Snippet snippet);
 

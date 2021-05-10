@@ -24,7 +24,7 @@ public class SnippetPreprocessingAspect {
     public Object prepareSnippet(ProceedingJoinPoint jp) {
         log.info("SNIPPET PREPARING");
         Object[] args = jp.getArgs();
-        args[0] = setup((Snippet) args[0]);
+        setup((Snippet) args[0]);
         try {
             return jp.proceed(args);
         } catch (Throwable throwable) {
@@ -34,13 +34,13 @@ public class SnippetPreprocessingAspect {
         }
     }
 
-    public Snippet setup(Snippet s) {
+    private void setup(Snippet s) {
+        OffsetDateTime now = OffsetDateTime.now();
         log.info("{}", s);
         if (s.getCreateDttm() == null) {
-            s.setCreateDttm(OffsetDateTime.now());
+            s.setCreateDttm(now);
         }
-        s.setModifyDttm(OffsetDateTime.now());
+        s.setModifyDttm(now);
         log.info("{}", s);
-        return s;
     }
 }

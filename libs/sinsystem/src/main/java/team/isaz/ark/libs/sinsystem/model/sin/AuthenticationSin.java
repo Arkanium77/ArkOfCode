@@ -1,10 +1,8 @@
 package team.isaz.ark.libs.sinsystem.model.sin;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
 
-@Getter
 public class AuthenticationSin extends Sin {
     public AuthenticationSin(ArkOfSinCodes.AuthenticationErrorCode code) {
         super(code.getStatus(), code.getValue(), "", code.getMessage());

@@ -7,40 +7,12 @@
         <groupId>team.isaz</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <groupId>team.isaz.ark</groupId>
     <artifactId>eureka</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>eureka</name>
-    <description>eureka app</description>
-
-    <properties>
-        <java.version>1.8</java.version>
-        <spring.cloud.version>2.2.2.RELEASE</spring.cloud.version>
-        <springdoc.version>1.4.1</springdoc.version>
-        <slf4j-api.version>1.7.25</slf4j-api.version>
-        <spring.boot.version>2.3.0.RELEASE</spring.boot.version>
-        <spring.integration.version>3.3.0.RELEASE</spring.integration.version>
-        <spring.kafka.version>2.5.3.RELEASE</spring.kafka.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR10</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
-        <!--Spring Cloud Framework-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
@@ -49,17 +21,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!--Slf4j-->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
-        <!--Jackson-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.11.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -71,5 +36,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

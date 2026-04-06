@@ -19,7 +19,7 @@ import team.isaz.ark.user.dto.UserInfo;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.service.main.AccountService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Validated
 @RestController

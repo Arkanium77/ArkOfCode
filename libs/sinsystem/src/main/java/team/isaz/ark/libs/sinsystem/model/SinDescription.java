@@ -1,20 +1,18 @@
 package team.isaz.ark.libs.sinsystem.model;
 
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import team.isaz.ark.libs.sinsystem.model.sin.Sin;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Slf4j
-@Getter
-@ToString
 public class SinDescription {
+    private static final Logger log = LoggerFactory.getLogger(SinDescription.class);
+
     private final String timestamp;
     private final String path;
     private final String serviceCode;
@@ -33,6 +31,14 @@ public class SinDescription {
         this.path = getPath(request);
     }
 
+    public String getTimestamp() { return timestamp; }
+    public String getPath() { return path; }
+    public String getServiceCode() { return serviceCode; }
+    public String getHttpErrorCode() { return httpErrorCode; }
+    public String getArkErrorCode() { return arkErrorCode; }
+    public String getLocalizedMessage() { return localizedMessage; }
+    public String getMessage() { return message; }
+
     private String getPath(WebRequest r) {
         try {
             ServletWebRequest r1 = (ServletWebRequest) r;
@@ -42,5 +48,17 @@ public class SinDescription {
             return "unknown";
         }
     }
-}
 
+    @Override
+    public String toString() {
+        return "SinDescription{" +
+                "timestamp='" + timestamp + '\'' +
+                ", path='" + path + '\'' +
+                ", serviceCode='" + serviceCode + '\'' +
+                ", httpErrorCode='" + httpErrorCode + '\'' +
+                ", arkErrorCode='" + arkErrorCode + '\'' +
+                ", localizedMessage='" + localizedMessage + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
+}

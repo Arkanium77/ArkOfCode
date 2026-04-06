@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.user.constants.RegexPatterns;
 import team.isaz.ark.user.service.main.UserService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import java.util.Objects;
 
 @Validated

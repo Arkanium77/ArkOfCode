@@ -1,9 +1,7 @@
 package team.isaz.ark.libs.sinsystem.model.sin;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Getter
 public abstract class Sin extends RuntimeException {
     private final HttpStatus status;
     private final String arkErrorCode;
@@ -14,6 +12,19 @@ public abstract class Sin extends RuntimeException {
         this.status = status;
         this.arkErrorCode = arkErrorCode;
         this.localizedMessage = localizedMessage;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public String getArkErrorCode() {
+        return arkErrorCode;
+    }
+
+    @Override
+    public String getLocalizedMessage() {
+        return localizedMessage;
     }
 
     protected static String throwableToString(Throwable t) {

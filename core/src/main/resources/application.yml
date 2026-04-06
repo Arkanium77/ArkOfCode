@@ -13,15 +13,17 @@ spring:
           enabled: true
 elastic-search:
   scheme: http
-  hosts: localhost
-  ports: 9200
+  hosts:
+    - localhost
+  ports:
+    - 9200
   initial-import:
     enabled: false
 
 eureka:
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka
   instance:
     preferIpAddress: true
     lease-expiration-duration-in-seconds: 90

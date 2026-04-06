@@ -7,13 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.ClearScrollRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import team.isaz.ark.core.constants.Status;
 import team.isaz.ark.core.dto.TokenCheck;
@@ -24,7 +21,6 @@ import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
 import team.isaz.ark.libs.sinsystem.model.sin.AuthenticationSin;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchService {
     private final SnippetRepository snippetRepository;
-    @Qualifier("elasticHighLevelClient")
-    private final RestHighLevelClient client;
+    private final ElasticsearchClientFacade elasticsearchClientFacade;
     private final ObjectMapper mapper;
     private final ComplexRequestHelper requestHelper;
     private final AuthService authService;
@@ -54,17 +49,16 @@ public class SearchService {
 
     private List<SearchHit> trySearch(BoolQueryBuilder query) {
         try {
-            SearchResponse r = client.search(new SearchRequest("snippets")
-                            .source(new SearchSourceBuilder()
-                                    .query(query)
-                            ).scroll(TimeValue.timeValueMinutes(1L)),
-                    RequestOptions.DEFAULT);
+            SearchResponse r = elasticsearchClientFacade.search(new SearchRequest("snippets")
+                    .source(new SearchSourceBuilder()
+                            .query(query)
+                    ).scroll(TimeValue.timeValueMinutes(1L)));
 
             ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
             clearScrollRequest.addScrollId(r.getScrollId());
             try {
-                client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
-            } catch (IOException e) {
+                elasticsearchClientFacade.clearScroll(clearScrollRequest);
+            } catch (Exception e) {
                 log.error("Can't clear scroll context with id=<{}>", r.getScrollId());
             }
             return Arrays.asList(r.getHits().getHits());

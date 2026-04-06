@@ -23,6 +23,7 @@ public class Snippet {
     private OffsetDateTime createDttm;
     @Field(type = FieldType.Date_Nanos, format = DateFormat.date_time)
     private OffsetDateTime modifyDttm;
+    @Builder.Default
     private boolean hidden = false;
     private String author;
     private String title;

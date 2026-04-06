@@ -74,7 +74,6 @@
         </pluginManagement>
     </build>
 
-
     <profiles>
         <profile>
             <id>coverage</id>
@@ -90,11 +89,6 @@
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
-                                <configuration>
-                                    <includes>
-                                        <include>team/isaz/ark/*</include>
-                                    </includes>
-                                </configuration>
                             </execution>
                             <execution>
                                 <id>report</id>
@@ -102,6 +96,59 @@
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
+                            </execution>
+                            <execution>
+                                <id>check</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <rule>
+                                            <element>CLASS</element>
+                                            <includes>
+                                                <include>team.isaz.ark.backup.controller.ErrorStubController</include>
+                                                <include>team.isaz.ark.backup.controller.SecuredController</include>
+                                                <include>team.isaz.ark.backup.service.AuthService</include>
+                                                <include>team.isaz.ark.backup.service.BackupService</include>
+                                                <include>team.isaz.ark.core.controller.ErrorStubController</include>
+                                                <include>team.isaz.ark.core.controller.InternalController</include>
+                                                <include>team.isaz.ark.core.controller.PublicController</include>
+                                                <include>team.isaz.ark.core.controller.SecuredController</include>
+                                                <include>team.isaz.ark.core.service.AuthService</include>
+                                                <include>team.isaz.ark.core.service.InternalOperationService</include>
+                                                <include>team.isaz.ark.core.service.PublisherService</include>
+                                                <include>team.isaz.ark.core.service.SearchService</include>
+                                                <include>team.isaz.ark.core.service.helper.ComplexRequestHelper</include>
+                                                <include>team.isaz.ark.user.controller.AdminController</include>
+                                                <include>team.isaz.ark.user.controller.AuthController</include>
+                                                <include>team.isaz.ark.user.controller.ErrorStubController</include>
+                                                <include>team.isaz.ark.user.controller.InternalController</include>
+                                                <include>team.isaz.ark.user.controller.UserController</include>
+                                                <include>team.isaz.ark.user.configuration.jwt.JwtFilter</include>
+                                                <include>team.isaz.ark.user.configuration.jwt.JwtProvider</include>
+                                                <include>team.isaz.ark.user.service.auxiliary.CustomUserDetailsService</include>
+                                                <include>team.isaz.ark.user.service.main.AccountService</include>
+                                                <include>team.isaz.ark.user.service.main.AdminService</include>
+                                                <include>team.isaz.ark.user.service.main.SnippetVaultService</include>
+                                                <include>team.isaz.ark.user.service.main.UserService</include>
+                                            </includes>
+                                            <limits>
+                                                <limit>
+                                                    <counter>LINE</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>1.00</minimum>
+                                                </limit>
+                                                <limit>
+                                                    <counter>BRANCH</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>1.00</minimum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

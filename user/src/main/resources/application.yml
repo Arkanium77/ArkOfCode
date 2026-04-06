@@ -29,7 +29,7 @@ spring:
 eureka:
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka
   instance:
     preferIpAddress: true
     lease-expiration-duration-in-seconds: 90
@@ -45,7 +45,7 @@ feign:
     name: ark-core
 
 jwt:
-  secret: jwtsecretword
+  secret: jwtsecretwordjwtsecretwordjwtsecretword12
   token.lifetime:
     access: 1
     refresh: 30

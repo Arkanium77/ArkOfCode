@@ -23,8 +23,8 @@ import team.isaz.ark.core.service.AuthService;
 import team.isaz.ark.core.service.PublisherService;
 import team.isaz.ark.core.service.SearchService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Set;
 

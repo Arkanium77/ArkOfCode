@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import team.isaz.ark.core.entity.Snippet;
 import team.isaz.ark.core.service.SearchService;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController

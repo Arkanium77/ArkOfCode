@@ -10,7 +10,7 @@ import team.isaz.ark.user.configuration.jwt.JwtProvider;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.repository.UserEntityRepository;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 @Slf4j
 @Service

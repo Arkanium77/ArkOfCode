@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
-import team.isaz.ark.user.configuration.jwt.JwtProvider;
+import team.isaz.ark.user.config.jwt.JwtProvider;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.repository.UserEntityRepository;
 

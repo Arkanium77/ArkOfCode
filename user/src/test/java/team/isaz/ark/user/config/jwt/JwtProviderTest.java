@@ -1,4 +1,4 @@
-package team.isaz.ark.user.configuration.jwt;
+package team.isaz.ark.user.config.jwt;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

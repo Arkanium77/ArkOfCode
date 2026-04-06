@@ -1,4 +1,4 @@
-package team.isaz.ark.user.configuration;
+package team.isaz.ark.user.config;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

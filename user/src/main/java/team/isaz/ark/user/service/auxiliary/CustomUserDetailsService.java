@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import team.isaz.ark.user.configuration.CustomUserDetails;
+import team.isaz.ark.user.config.CustomUserDetails;
 import team.isaz.ark.user.entity.RoleEntity;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.service.main.AccountService;

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import team.isaz.ark.backup.entity.Snippet;
 import team.isaz.ark.backup.repository.SnippetRepository;
+import team.isaz.ark.backup.support.TestDirectorySupport;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
 
 import java.io.File;
@@ -33,18 +33,23 @@ class BackupServiceTest {
     private final ObjectWriter writer = mapper.writerFor(mapper.getTypeFactory().constructCollectionType(List.class, Snippet.class));
 
     @Test
-    void shouldBackupIntoProvidedDirectory(@TempDir Path tempDir) throws Exception {
+    void shouldBackupIntoProvidedDirectory() throws Exception {
         BackupService backupService = new BackupService(snippetRepository, writer, mapper);
         Snippet snippet = Snippet.builder().id("s-1").author("captain").title("hello").text("world").tags(Set.of("java")).build();
         Page<Snippet> page = new PageImpl<>(List.of(snippet), PageRequest.of(0, 100), 1);
         Mockito.when(snippetRepository.findAll(PageRequest.of(0, 100))).thenReturn(page);
         Mockito.when(snippetRepository.count()).thenReturn(1L);
 
-        Path backupDir = tempDir.resolve("backup");
-        String description = backupService.backup(backupDir.toString()).getDescription();
+        Path tempDir = TestDirectorySupport.create("backup-service-");
+        try {
+            Path backupDir = tempDir.resolve("backup");
+            String description = backupService.backup(backupDir.toString()).getDescription();
 
-        Assertions.assertThat(description).contains("1/1");
-        Assertions.assertThat(Files.list(backupDir)).hasSize(1);
+            Assertions.assertThat(description).contains("1/1");
+            Assertions.assertThat(Files.list(backupDir)).hasSize(1);
+        } finally {
+            TestDirectorySupport.delete(tempDir);
+        }
     }
 
     @Test
@@ -60,34 +65,42 @@ class BackupServiceTest {
     }
 
     @Test
-    void shouldRestoreSnippetsFromJsonFiles(@TempDir Path tempDir) throws Exception {
+    void shouldRestoreSnippetsFromJsonFiles() throws Exception {
         BackupService backupService = new BackupService(snippetRepository, writer, mapper);
-        Snippet first = Snippet.builder().id("s-1").author("one").build();
-        Snippet second = Snippet.builder().id("s-2").author("two").build();
-        Path file = tempDir.resolve("data0.json");
-        writer.writeValue(file.toFile(), List.of(first, second));
+        Path tempDir = TestDirectorySupport.create("backup-service-");
+        try {
+            Snippet first = Snippet.builder().id("s-1").author("one").build();
+            Snippet second = Snippet.builder().id("s-2").author("two").build();
+            Path file = tempDir.resolve("data0.json");
+            writer.writeValue(file.toFile(), List.of(first, second));
 
-        String description = backupService.restore(tempDir.toString()).getDescription();
+            String description = backupService.restore(tempDir.toString()).getDescription();
 
-        Assertions.assertThat(description).contains("2 snippets");
-        Mockito.verify(snippetRepository).saveAll(Mockito.argThat(items -> StreamSupport.stream(items.spliterator(), false).count() == 2));
+            Assertions.assertThat(description).contains("2 snippets");
+            Mockito.verify(snippetRepository).saveAll(Mockito.argThat(items -> StreamSupport.stream(items.spliterator(), false).count() == 2));
+        } finally {
+            TestDirectorySupport.delete(tempDir);
+        }
     }
 
     @Test
-    void shouldIgnoreUnreadableOrBrokenFilesOnRestore(@TempDir Path tempDir) throws Exception {
+    void shouldIgnoreUnreadableOrBrokenFilesOnRestore() throws Exception {
         BackupService backupService = new BackupService(snippetRepository, writer, mapper);
-        Path brokenFile = tempDir.resolve("broken.json");
-        Files.writeString(brokenFile, "{broken");
-        File unreadableFile = tempDir.resolve("unreadable.json").toFile();
-        Files.writeString(unreadableFile.toPath(), "[]");
-        unreadableFile.setReadable(false, false);
-
+        Path tempDir = TestDirectorySupport.create("backup-service-");
         try {
+            Path brokenFile = tempDir.resolve("broken.json");
+            Files.writeString(brokenFile, "{broken");
+            File unreadableFile = tempDir.resolve("unreadable.json").toFile();
+            Files.writeString(unreadableFile.toPath(), "[]");
+            unreadableFile.setReadable(false, false);
+
             String description = backupService.restore(tempDir.toString()).getDescription();
 
             Assertions.assertThat(description).contains("0 snippets");
         } finally {
+            File unreadableFile = tempDir.resolve("unreadable.json").toFile();
             unreadableFile.setReadable(true, false);
+            TestDirectorySupport.delete(tempDir);
         }
     }
 
@@ -101,12 +114,17 @@ class BackupServiceTest {
     }
 
     @Test
-    void shouldRejectEmptyRestoreDirectory(@TempDir Path tempDir) {
+    void shouldRejectEmptyRestoreDirectory() throws Exception {
         BackupService backupService = new BackupService(snippetRepository, writer, mapper);
+        Path tempDir = TestDirectorySupport.create("backup-service-");
 
-        Assertions.assertThatThrownBy(() -> backupService.restore(tempDir.toString()))
-                .isInstanceOf(ValidationSin.class)
-                .hasMessageContaining("empty");
+        try {
+            Assertions.assertThatThrownBy(() -> backupService.restore(tempDir.toString()))
+                    .isInstanceOf(ValidationSin.class)
+                    .hasMessageContaining("empty");
+        } finally {
+            TestDirectorySupport.delete(tempDir);
+        }
     }
 
     @Test

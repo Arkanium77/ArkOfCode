@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import team.isaz.ark.user.configuration.CustomUserDetails;
+import team.isaz.ark.user.config.CustomUserDetails;
 import team.isaz.ark.user.entity.RoleEntity;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.service.main.AccountService;

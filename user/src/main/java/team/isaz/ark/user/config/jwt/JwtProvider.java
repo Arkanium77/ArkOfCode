@@ -1,4 +1,4 @@
-package team.isaz.ark.user.configuration.jwt;
+package team.isaz.ark.user.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

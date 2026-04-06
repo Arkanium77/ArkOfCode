@@ -1,0 +1,17 @@
+server:
+  port: 8761
+
+eureka:
+  server:
+    expected-client-renewal-interval-seconds: 10
+    enable-self-preservation: false
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  instance:
+    preferIpAddress: true
+
+logging:
+  level:
+    root: INFO
+    team.isaz.ark: DEBUG

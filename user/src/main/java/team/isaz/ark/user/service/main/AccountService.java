@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import team.isaz.ark.libs.sinsystem.model.ArkOfSinCodes;
 import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
-import team.isaz.ark.user.configuration.jwt.JwtProvider;
+import team.isaz.ark.user.config.jwt.JwtProvider;
 import team.isaz.ark.user.constants.Roles;
 import team.isaz.ark.user.dto.Tokens;
 import team.isaz.ark.user.dto.UserInfo;

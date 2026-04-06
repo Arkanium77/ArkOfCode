@@ -1,75 +1,17 @@
 package team.isaz.ark.user.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import team.isaz.ark.user.UserApplication;
+import team.isaz.ark.user.config.BasicIntegrationTest;
 import team.isaz.ark.user.dto.Tokens;
 import team.isaz.ark.user.dto.UserInfo;
-import team.isaz.ark.user.entity.UserEntity;
-import team.isaz.ark.user.repository.UserEntityRepository;
 
-import java.util.stream.StreamSupport;
-
-@Testcontainers
-@SpringBootTest(classes = UserApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@AutoConfigureMockMvc
-class UserControllerIntegrationTest {
-
-    @Container
-    private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("user_service")
-            .withUsername("noah")
-            .withPassword("righteous");
-
-    @RegisterExtension
-    static WireMockExtension wireMock = WireMockExtension.newInstance().build();
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("eureka.client.enabled", () -> false);
-        registry.add("spring.cloud.discovery.enabled", () -> true);
-        registry.add("spring.datasource.url", POSTGRESQL_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRESQL_CONTAINER::getUsername);
-        registry.add("spring.datasource.password", POSTGRESQL_CONTAINER::getPassword);
-        registry.add("spring.datasource.driver-class-name", POSTGRESQL_CONTAINER::getDriverClassName);
-        registry.add("feign.core.name", () -> "ark-core-test");
-        registry.add("spring.cloud.discovery.client.simple.instances.ark-core-test[0].uri", wireMock::baseUrl);
-    }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private UserEntityRepository userEntityRepository;
-
-    private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-
-    @AfterEach
-    void cleanUp() {
-        StreamSupport.stream(userEntityRepository.findAll().spliterator(), false)
-                .map(UserEntity::getLogin)
-                .filter(login -> !"root".equals(login) && !"_tech".equals(login))
-                .forEach(login -> userEntityRepository.findByLogin(login).ifPresent(userEntityRepository::delete));
-        wireMock.resetAll();
-    }
+class UserControllerIntegrationTest extends BasicIntegrationTest {
 
     @Test
     void shouldHandlePublicSecuredHiddenInternalAndErrorFlows() throws Exception {

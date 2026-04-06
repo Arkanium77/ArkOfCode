@@ -1,4 +1,4 @@
-package team.isaz.ark.user.configuration.jwt;
+package team.isaz.ark.user.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
-import team.isaz.ark.user.configuration.CustomUserDetails;
+import team.isaz.ark.user.config.CustomUserDetails;
 import team.isaz.ark.user.entity.RoleEntity;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.service.auxiliary.CustomUserDetailsService;

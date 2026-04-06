@@ -1,0 +1,36 @@
+server:
+  port: 30302
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/Changelog.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: main
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+feign:
+  client.config.default:
+    readTimeout: 15000
+    connectTimeout: 15000
+    hystrix:
+      enabled: false
+  core:
+    name: ark-core
+
+jwt:
+  token.lifetime:
+    access: 1
+    refresh: 30

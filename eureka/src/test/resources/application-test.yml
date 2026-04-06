@@ -1,0 +1,43 @@
+spring:
+  config:
+    import: ""
+  cloud:
+    config:
+      enabled: false
+      import-check:
+        enabled: false
+
+server:
+  port: 8761
+
+eureka:
+  server:
+    expected-client-renewal-interval-seconds: 10
+    enable-self-preservation: false
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  instance:
+    preferIpAddress: true
+
+logging:
+  level:
+    root: INFO
+    team.isaz.ark: DEBUG
+
+management:
+  info:
+    git:
+      mode: full
+  endpoint:
+    info:
+      enabled: true
+    logfile:
+      enabled: true
+    health:
+      show-details: always
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "*"
+        allowed-methods: GET

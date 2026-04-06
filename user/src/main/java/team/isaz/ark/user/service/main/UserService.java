@@ -1,16 +1,15 @@
 package team.isaz.ark.user.service.main;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.isaz.ark.libs.sinsystem.model.sin.InternalSin;
 import team.isaz.ark.libs.sinsystem.model.sin.ValidationSin;
-import team.isaz.ark.user.configuration.jwt.JwtProvider;
+import team.isaz.ark.user.config.jwt.JwtProvider;
 import team.isaz.ark.user.entity.UserEntity;
 import team.isaz.ark.user.repository.UserEntityRepository;
-
-import jakarta.transaction.Transactional;
 
 @Slf4j
 @Service

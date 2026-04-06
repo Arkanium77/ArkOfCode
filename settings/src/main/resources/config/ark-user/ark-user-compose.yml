@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_service
+    # Demo credentials only. In a real application, encrypt and externalize usernames and passwords.
+    username: noah
+    # Demo credentials only. In a real application, encrypt and externalize usernames and passwords.
+    password: righteous
+
+jwt:
+  # Demo secret only. In a real application, encrypt and externalize JWT secrets.
+  secret: jwtsecretwordjwtsecretwordjwtsecretword12

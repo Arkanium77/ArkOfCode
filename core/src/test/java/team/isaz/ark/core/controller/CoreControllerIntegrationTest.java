@@ -1,79 +1,18 @@
 package team.isaz.ark.core.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.assertj.core.api.Assertions;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testcontainers.elasticsearch.ElasticsearchContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
-import team.isaz.ark.core.CoreApplication;
+import team.isaz.ark.core.config.BasicIntegrationTest;
 import team.isaz.ark.core.entity.Snippet;
-import team.isaz.ark.core.repository.SnippetRepository;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Set;
 
-@Testcontainers
-@SpringBootTest(classes = CoreApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@AutoConfigureMockMvc
-class CoreControllerIntegrationTest {
-
-    @Container
-    private static final ElasticsearchContainer ELASTICSEARCH_CONTAINER =
-            new ElasticsearchContainer(DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch:8.15.3"))
-                    .withEnv("xpack.security.enabled", "false")
-                    .withEnv("discovery.type", "single-node");
-
-    @RegisterExtension
-    static WireMockExtension wireMock = WireMockExtension.newInstance().build();
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("eureka.client.enabled", () -> false);
-        registry.add("spring.cloud.discovery.enabled", () -> true);
-        registry.add("feign.user.name", () -> "ark-user-test");
-        registry.add("spring.cloud.discovery.client.simple.instances.ark-user-test[0].uri", wireMock::baseUrl);
-        registry.add("elastic-search.hosts[0]", ELASTICSEARCH_CONTAINER::getHost);
-        registry.add("elastic-search.ports[0]", () -> ELASTICSEARCH_CONTAINER.getMappedPort(9200));
-        registry.add("elastic-search.scheme", () -> "http");
-    }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private SnippetRepository snippetRepository;
-
-    @Autowired
-    private RestHighLevelClient restHighLevelClient;
-
-    private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
-
-    @AfterEach
-    void cleanUp() throws Exception {
-        snippetRepository.deleteAll();
-        refreshIndex();
-        wireMock.resetAll();
-    }
+class CoreControllerIntegrationTest extends BasicIntegrationTest {
 
     @Test
     void shouldServePublicAndSecuredControllerFlows() throws Exception {
@@ -164,10 +103,6 @@ class CoreControllerIntegrationTest {
                 .willReturn(WireMock.aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .withBody("{\"status\":\"OK\",\"login\":\"" + login + "\",\"role\":\"" + role + "\"}")));
-    }
-
-    private void refreshIndex() throws Exception {
-        restHighLevelClient.indices().refresh(new RefreshRequest("snippets"), RequestOptions.DEFAULT);
     }
 }
 

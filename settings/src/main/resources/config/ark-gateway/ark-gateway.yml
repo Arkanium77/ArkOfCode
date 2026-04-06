@@ -1,0 +1,36 @@
+server:
+  port: 80
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: core
+          uri: lb://ARK-CORE
+          filters:
+            - RewritePath=/core/internal/(?<path>.*), /public/error
+            - RewritePath=/core/public/(?<path>.*), /public/$\{path}
+            - RewritePath=/core/secured/(?<path>.*), /secured/$\{path}
+          predicates:
+            - Path=/core/**
+        - id: user
+          uri: lb://ARK-USER
+          filters:
+            - RewritePath=/user/internal/(?<path>.*), /public/error
+            - RewritePath=/user/public/(?<path>.*), /public/$\{path}
+            - RewritePath=/user/secured/(?<path>.*), /secured/$\{path}
+          predicates:
+            - Path=/user/**
+        - id: backup
+          uri: lb://ARK-BACKUP
+          filters:
+            - RewritePath=/backup/internal/(?<path>.*), /public/error
+            - RewritePath=/backup/public/(?<path>.*), /public/$\{path}
+            - RewritePath=/backup/secured/(?<path>.*), /secured/$\{path}
+          predicates:
+            - Path=/backup/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

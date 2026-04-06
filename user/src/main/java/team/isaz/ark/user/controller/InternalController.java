@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import team.isaz.ark.user.configuration.jwt.JwtFilter;
-import team.isaz.ark.user.configuration.jwt.JwtProvider;
+import team.isaz.ark.user.config.jwt.JwtFilter;
+import team.isaz.ark.user.config.jwt.JwtProvider;
 import team.isaz.ark.user.constants.Status;
 import team.isaz.ark.user.dto.TokenCheck;
 

@@ -1,19 +1,19 @@
-package team.isaz.ark.user.configuration.jwt;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
-import team.isaz.ark.user.configuration.CustomUserDetails;
-import team.isaz.ark.user.service.auxiliary.CustomUserDetailsService;
+package team.isaz.ark.user.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
+import team.isaz.ark.user.config.CustomUserDetails;
+import team.isaz.ark.user.service.auxiliary.CustomUserDetailsService;
+
 import java.io.IOException;
 import java.util.UUID;
 

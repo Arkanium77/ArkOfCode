@@ -1,4 +1,4 @@
-package team.isaz.ark.user.configuration;
+package team.isaz.ark.user.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

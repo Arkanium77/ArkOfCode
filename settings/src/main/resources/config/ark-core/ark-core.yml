@@ -1,0 +1,25 @@
+server:
+  port: 30301
+spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+elastic-search:
+  scheme: http
+  initial-import:
+    enabled: false
+
+feign:
+  client.config.default:
+    readTimeout: 15000
+    connectTimeout: 15000
+    hystrix:
+      enabled: false
+  user:
+    name: ark-user

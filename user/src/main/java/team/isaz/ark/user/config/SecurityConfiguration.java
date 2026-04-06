@@ -1,4 +1,4 @@
-package team.isaz.ark.user.configuration;
+package team.isaz.ark.user.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import team.isaz.ark.user.configuration.jwt.JwtFilter;
+import team.isaz.ark.user.config.jwt.JwtFilter;
 
 @Configuration
 @EnableWebSecurity

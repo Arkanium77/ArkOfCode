@@ -1,0 +1,38 @@
+services:
+  ark-postgres:
+    image: postgres:17-alpine
+    container_name: ark-postgres
+    environment:
+      POSTGRES_DB: user_service
+      POSTGRES_USER: noah
+      POSTGRES_PASSWORD: righteous
+    ports:
+      - "5432:5432"
+    volumes:
+      - ark-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U noah -d user_service" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ark-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.24
+    container_name: ark-elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - ark-elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health || exit 1" ]
+      interval: 20s
+      timeout: 10s
+      retries: 15
+
+volumes:
+  ark-postgres-data:
+  ark-elasticsearch-data:
